@@ -1,67 +1,45 @@
 'use client'
+import { modulData, alerts, candidate } from '@/lib/data'
 import {
-  statsKartu, modulData, alerts, aktifitasTimeline,
-  elektabilitasChart, budgetPos, candidate
-} from '@/lib/data'
-import {
-  TrendingUp, TrendingDown, AlertCircle, AlertTriangle,
-  Info, Users, Map, Megaphone, ClipboardCheck,
+  AlertCircle, AlertTriangle, Info,
+  Users, Map, Megaphone, ClipboardCheck,
   BarChart2, Wallet, Radio, Heart, UserCircle,
-  LayoutDashboard, Zap, ChevronRight, ArrowUpRight
+  LayoutDashboard, ArrowUpRight
 } from 'lucide-react'
 
 const colorTextMap: Record<string, string> = {
-  indigo: 'text-indigo-400',
-  teal:   'text-teal-400',
-  amber:  'text-amber-400',
-  green:  'text-green-400',
-  purple: 'text-purple-400',
-  pink:   'text-pink-400',
-  orange: 'text-orange-400',
-  sky:    'text-sky-400',
-  red:    'text-red-400',
+  indigo:'text-indigo-400', teal:'text-teal-400', amber:'text-amber-400',
+  green:'text-green-400',   purple:'text-purple-400', pink:'text-pink-400',
+  orange:'text-orange-400', sky:'text-sky-400', red:'text-red-400',
 }
 const colorBgMap: Record<string, string> = {
-  indigo: 'bg-indigo-500/10 border-indigo-500/20',
-  teal:   'bg-teal-500/10 border-teal-500/20',
-  amber:  'bg-amber-500/10 border-amber-500/20',
-  green:  'bg-green-500/10 border-green-500/20',
-  purple: 'bg-purple-500/10 border-purple-500/20',
-  pink:   'bg-pink-500/10 border-pink-500/20',
-  orange: 'bg-orange-500/10 border-orange-500/20',
-  sky:    'bg-sky-500/10 border-sky-500/20',
-  red:    'bg-red-500/10 border-red-500/20',
+  indigo:'bg-indigo-500/10 border-indigo-500/20', teal:'bg-teal-500/10 border-teal-500/20',
+  amber:'bg-amber-500/10 border-amber-500/20',   green:'bg-green-500/10 border-green-500/20',
+  purple:'bg-purple-500/10 border-purple-500/20', pink:'bg-pink-500/10 border-pink-500/20',
+  orange:'bg-orange-500/10 border-orange-500/20', sky:'bg-sky-500/10 border-sky-500/20',
+  red:'bg-red-500/10 border-red-500/20',
 }
-const colorBarMap: Record<string, string> = {
-  indigo: 'bg-indigo-500',
-  teal:   'bg-teal-500',
-  amber:  'bg-amber-500',
-  green:  'bg-green-500',
-  purple: 'bg-purple-500',
-  pink:   'bg-pink-500',
-  orange: 'bg-orange-500',
-  sky:    'bg-sky-500',
-  red:    'bg-red-500',
-}
-
 const iconMap: Record<string, React.ElementType> = {
-  m0: LayoutDashboard, m9: UserCircle, m1: Users, m2: Map,
-  m3: Megaphone, m4: ClipboardCheck, m5: BarChart2,
-  m6: Wallet, m7: Radio, m8: Heart,
+  m0:LayoutDashboard, m9:UserCircle, m1:Users,  m2:Map,
+  m3:Megaphone, m4:ClipboardCheck, m5:BarChart2,
+  m6:Wallet, m7:Radio, m8:Heart,
 }
+const statCards = [
+  { label:'Total Relawan',  value:'0',    delta:'Belum ada relawan',  color:'indigo' },
+  { label:'TPS Terpetakan', value:'0',    delta:'dari ± 1.800 TPS',   color:'teal'   },
+  { label:'Dana Tersisa',   value:'Rp —', delta:'Budget belum diset', color:'amber'  },
+  { label:'Elektabilitas',  value:'—%',   delta:'Belum ada survei',   color:'green'  },
+]
 
-interface DashboardOverviewProps {
-  onNavigate: (id: string) => void
-}
+interface Props { onNavigate: (id: string) => void }
 
-export default function DashboardOverview({ onNavigate }: DashboardOverviewProps) {
-  const maxElekta = Math.max(...elektabilitasChart.map(d => d.val))
-  const chartHeight = 80
+export default function DashboardOverview({ onNavigate }: Props) {
+  const typedAlerts = alerts as any[]
+  const criticalCount = typedAlerts.filter(a => a.level === 'critical').length
 
   return (
     <div className="space-y-6">
 
-      {/* Candidate Hero */}
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 relative overflow-hidden animate-slide-up">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-transparent to-transparent pointer-events-none" />
         <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
@@ -74,161 +52,114 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
               <span className="text-[10px] bg-indigo-500/15 border border-indigo-500/25 text-indigo-300 px-2 py-0.5 rounded-full">No. {candidate.nomorUrut}</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">{candidate.title} · {candidate.region}</p>
-            <p className="text-xs text-[var(--text-muted)] mt-0.5">Bersama {candidate.runningMate} · {candidate.party}</p>
+            <p className="text-xs text-[var(--text-muted)] mt-0.5">{candidate.party || 'Partai belum diisi'}</p>
           </div>
           <div className="flex flex-row sm:flex-col gap-3 sm:gap-1 sm:text-right">
             <div>
-              <p className="text-2xl font-bold text-green-400">{candidate.elektabilitas}%</p>
+              <p className="text-2xl font-bold text-[var(--text-muted)]">—%</p>
               <p className="text-[10px] text-[var(--text-muted)]">elektabilitas saat ini</p>
             </div>
-            <div className="flex items-center gap-1 sm:justify-end">
-              <TrendingUp size={12} className="text-green-400" />
-              <span className="text-xs text-green-400 font-medium">+{candidate.elektabilitasDelta}% bulan ini</span>
-            </div>
+            <p className="text-[10px] text-[var(--text-muted)]">Belum ada data survei</p>
           </div>
         </div>
       </div>
 
-      {/* 4 Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statsKartu.map((s, i) => (
-          <div
-            key={s.label}
-            className={`rounded-xl border bg-[var(--bg-card)] p-4 animate-slide-up animate-delay-${i + 1}`}
-            style={{ borderColor: 'var(--border)' }}
-          >
+        {statCards.map((s, i) => (
+          <div key={s.label} className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4" style={{ animationDelay:`${i*0.05}s` }}>
             <p className="text-[11px] text-[var(--text-muted)] mb-2">{s.label}</p>
             <p className={`text-xl font-bold ${colorTextMap[s.color]}`}>{s.value}</p>
-            <div className="flex items-center gap-1 mt-1.5">
-              {s.trend === 'up'
-                ? <TrendingUp size={11} className="text-green-400" />
-                : <TrendingDown size={11} className="text-red-400" />}
-              <span className={`text-[10px] ${s.trend === 'up' ? 'text-green-400' : 'text-red-400'}`}>{s.delta}</span>
-            </div>
+            <p className="text-[10px] text-[var(--text-muted)] mt-1.5">{s.delta}</p>
           </div>
         ))}
       </div>
 
-      {/* Main grid: Chart + Alerts + Timeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-        {/* Elektabilitas Chart */}
-        <div className="lg:col-span-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 animate-slide-up animate-delay-3">
+        <div className="lg:col-span-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">Tren elektabilitas</h3>
-              <p className="text-[11px] text-[var(--text-muted)] mt-0.5">6 bulan terakhir · survei internal</p>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Survei internal · belum ada data</p>
             </div>
             <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg-hover)] px-2 py-1 rounded-md">Modul 5</span>
           </div>
-          {/* Simple bar chart */}
-          <div className="flex items-end gap-2 h-24">
-            {elektabilitasChart.map((d, i) => {
-              const h = (d.val / maxElekta) * chartHeight
-              const isLast = i === elektabilitasChart.length - 1
-              return (
-                <div key={d.bln} className="flex-1 flex flex-col items-center gap-1.5">
-                  <span className={`text-[10px] font-semibold ${isLast ? 'text-green-400' : 'text-[var(--text-muted)]'}`}>{d.val}%</span>
-                  <div className="w-full rounded-t-md transition-all" style={{
-                    height: `${h}px`,
-                    background: isLast ? '#22c55e' : '#6366f1',
-                    opacity: isLast ? 1 : 0.4 + (i * 0.1)
-                  }} />
-                  <span className="text-[10px] text-[var(--text-muted)]">{d.bln}</span>
-                </div>
-              )
-            })}
+          <div className="flex items-center justify-center h-24 border border-dashed border-[var(--border-lit)] rounded-lg">
+            <p className="text-[11px] text-[var(--text-muted)] text-center">
+              Belum ada data elektabilitas<br />
+              <span className="text-[10px]">Input survei pertama di Modul 5</span>
+            </p>
           </div>
-          {/* Target line label */}
           <div className="mt-4 flex items-center gap-2">
             <div className="h-px flex-1 border-t border-dashed border-amber-500/40" />
             <span className="text-[10px] text-amber-400">Target {candidate.targetSuara}%</span>
           </div>
         </div>
 
-        {/* Alerts panel */}
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 animate-slide-up animate-delay-4">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Alert aktif</h3>
-            <span className="text-[10px] bg-red-500/15 text-red-400 px-2 py-0.5 rounded-full">
-              {alerts.filter(a => a.level === 'critical').length} kritis
+            <span className={`text-[10px] px-2 py-0.5 rounded-full ${criticalCount > 0 ? 'bg-red-500/15 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
+              {criticalCount} kritis
             </span>
           </div>
-          <div className="space-y-2">
-            {alerts.map(a => {
-              const Icon = a.level === 'critical' ? AlertCircle : a.level === 'warning' ? AlertTriangle : Info
-              const cls = a.level === 'critical' ? 'text-red-400 bg-red-500/10' : a.level === 'warning' ? 'text-amber-400 bg-amber-500/10' : 'text-sky-400 bg-sky-500/10'
-              return (
-                <div key={a.id} className="flex gap-2.5 p-2.5 rounded-lg hover:bg-[var(--bg-hover)] transition-all cursor-pointer">
-                  <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${cls}`}>
-                    <Icon size={12} />
+          {typedAlerts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-24 gap-2">
+              <span className="text-2xl">✓</span>
+              <p className="text-[11px] text-[var(--text-muted)] text-center">
+                Tidak ada alert<br />
+                <span className="text-[10px]">Lengkapi profil untuk mulai</span>
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {typedAlerts.map((a, idx) => {
+                const Icon = a.level === 'critical' ? AlertCircle : a.level === 'warning' ? AlertTriangle : Info
+                const cls = a.level === 'critical' ? 'text-red-400 bg-red-500/10' : a.level === 'warning' ? 'text-amber-400 bg-amber-500/10' : 'text-sky-400 bg-sky-500/10'
+                return (
+                  <div key={idx} className="flex gap-2.5 p-2.5 rounded-lg hover:bg-[var(--bg-hover)] transition-all cursor-pointer">
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${cls}`}>
+                      <Icon size={12} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] text-[var(--text-primary)] leading-tight">{a.msg}</p>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{a.modul} · {a.time}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] text-[var(--text-primary)] leading-tight">{a.msg}</p>
-                    <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{a.modul} · {a.time}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Budget + Timeline */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-        {/* Budget bars */}
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 animate-slide-up animate-delay-5">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Realisasi anggaran</h3>
             <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg-hover)] px-2 py-1 rounded-md">Modul 6</span>
           </div>
-          <div className="space-y-3">
-            {budgetPos.map(b => {
-              const pct = Math.round((b.used / b.total) * 100)
-              const isHigh = pct >= 85
-              return (
-                <div key={b.label}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[11px] text-[var(--text-secondary)]">{b.label}</span>
-                    <span className={`text-[11px] font-medium ${isHigh ? 'text-amber-400' : 'text-[var(--text-muted)]'}`}>
-                      {pct}% · Rp {b.used}jt / {b.total}jt
-                    </span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-[var(--bg-hover)]">
-                    <div
-                      className={`h-1.5 rounded-full transition-all ${isHigh ? 'bg-amber-400' : colorBarMap[b.color]}`}
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              )
-            })}
+          <div className="flex items-center justify-center h-20 border border-dashed border-[var(--border-lit)] rounded-lg">
+            <p className="text-[11px] text-[var(--text-muted)] text-center">
+              Budget kampanye belum dikonfigurasi<br />
+              <span className="text-[10px]">Setup di Modul 6</span>
+            </p>
           </div>
         </div>
-
-        {/* Activity timeline */}
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 animate-slide-up animate-delay-6">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-[var(--text-primary)]">Aktivitas hari ini</h3>
             <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg-hover)] px-2 py-1 rounded-md">Live</span>
           </div>
-          <div className="space-y-3">
-            {aktifitasTimeline.map((a, i) => (
-              <div key={i} className="flex gap-3 items-start">
-                <span className="text-[10px] font-mono text-[var(--text-muted)] w-10 flex-shrink-0 pt-0.5">{a.time}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-[var(--text-primary)] leading-tight">{a.action}</p>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{a.user} · {a.modul}</p>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center h-20">
+            <p className="text-[11px] text-[var(--text-muted)] text-center">
+              Belum ada aktivitas<br />
+              <span className="text-[10px]">Mulai dengan mendaftarkan relawan pertama</span>
+            </p>
           </div>
         </div>
       </div>
 
-      {/* All Modules Grid */}
-      <div className="animate-slide-up animate-delay-7">
+      <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">Semua modul</h3>
           <span className="text-[11px] text-[var(--text-muted)]">10 modul · klik untuk masuk</span>
@@ -237,29 +168,24 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
           {modulData.map((m, i) => {
             const Icon = iconMap[m.id] || LayoutDashboard
             const isLocked = m.status === 'locked'
-            const isStandby = m.status === 'standby'
             const healthColor = m.health >= 90 ? 'bg-green-400' : m.health >= 70 ? 'bg-amber-400' : m.health > 0 ? 'bg-red-400' : 'bg-[var(--text-muted)]'
-
             return (
               <button
                 key={m.id}
                 onClick={() => !isLocked && onNavigate(m.id)}
                 disabled={isLocked}
-                className={`rounded-xl border p-3.5 text-left transition-all group animate-slide-up animate-delay-${Math.min(i + 1, 10)}
-                  ${isLocked
-                    ? 'border-[var(--border)] bg-[var(--bg-card)] opacity-40 cursor-not-allowed'
-                    : 'border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--border-lit)] hover:bg-[var(--bg-hover)] cursor-pointer'
-                  }`}
+                style={{ animationDelay:`${i*0.04}s` }}
+                className={`rounded-xl border p-3.5 text-left transition-all group ${isLocked ? 'border-[var(--border)] bg-[var(--bg-card)] opacity-40 cursor-not-allowed' : 'border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--border-lit)] hover:bg-[var(--bg-hover)] cursor-pointer'}`}
               >
                 <div className="flex items-start justify-between mb-2.5">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colorBgMap[m.color]} border`}>
-                    <Icon size={14} className={colorTextMap[m.color]} />
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colorBgMap[m.color] || colorBgMap.indigo} border`}>
+                    <Icon size={14} className={colorTextMap[m.color] || colorTextMap.indigo} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     {m.alerts > 0 && (
                       <span className="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-semibold">{m.alerts}</span>
                     )}
-                    <div className={`w-1.5 h-1.5 rounded-full ${healthColor} ${m.health === 100 && !isLocked ? 'animate-pulse-slow' : ''}`} />
+                    <div className={`w-1.5 h-1.5 rounded-full ${healthColor}`} />
                   </div>
                 </div>
                 <p className="text-[11px] font-semibold text-[var(--text-primary)] leading-tight mb-1">
