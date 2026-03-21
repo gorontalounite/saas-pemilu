@@ -30,7 +30,7 @@ export default function Topbar({ moduleName }: { moduleName: string }) {
       {/* H count */}
       <div className="hidden sm:flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full">
         <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-        <span className="text-xs font-medium text-amber-400">{candidate.hariHitung} hari lagi</span>
+        <span ...>{Math.ceil((new Date('2029-02-14').getTime() - Date.now()) / 86400000).toLocaleString('id-ID')} hari lagi · 14 Feb 2029</span>
       </div>
 
       {/* Alert bell */}
