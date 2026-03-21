@@ -4,20 +4,13 @@ import { modulData, candidate } from '@/lib/data'
 import {
   LayoutDashboard, Users, Map, Megaphone, ClipboardCheck,
   BarChart2, Wallet, Radio, Heart, UserCircle,
-  ChevronRight, Bell, Settings, LogOut, Menu, X, Zap
+  ChevronRight, Bell, Settings, LogOut, Menu, X, Zap, Sun, Moon
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
-  m0: LayoutDashboard,
-  m9: UserCircle,
-  m1: Users,
-  m2: Map,
-  m3: Megaphone,
-  m4: ClipboardCheck,
-  m5: BarChart2,
-  m6: Wallet,
-  m7: Radio,
-  m8: Heart,
+  m0: LayoutDashboard, m9: UserCircle, m1: Users, m2: Map,
+  m3: Megaphone, m4: ClipboardCheck, m5: BarChart2,
+  m6: Wallet, m7: Radio, m8: Heart,
 }
 
 const colorMap: Record<string, string> = {
@@ -35,92 +28,95 @@ const colorMap: Record<string, string> = {
 interface SidebarProps {
   activeModul: string
   onSelect: (id: string) => void
+  isDark: boolean
+  onToggleTheme: () => void
 }
 
-export default function Sidebar({ activeModul, onSelect }: SidebarProps) {
+export default function Sidebar({ activeModul, onSelect, isDark, onToggleTheme }: SidebarProps) {
   const [open, setOpen] = useState(false)
 
-  const SidebarContent = () => (
+  const Content = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-            <Zap size={16} className="text-white" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-[var(--text-primary)] leading-none">KampanyeOS</p>
-            <p className="text-[10px] text-[var(--text-muted)] mt-0.5">v1.0 · Beta</p>
-          </div>
+      <div className="px-4 py-4 border-b border-[var(--border)] flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center flex-shrink-0">
+          <Zap size={15} className="text-white" />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-[var(--text-primary)] leading-none">KampanyeOS</p>
+          <p className="text-[10px] text-[var(--text-muted)] mt-0.5">v1.0 · Beta</p>
         </div>
       </div>
 
       {/* Candidate chip */}
-      <div className="px-4 py-3 border-b border-[var(--border)]">
-        <div className="flex items-center gap-2.5 p-2 rounded-lg bg-[var(--bg-hover)]">
+      <div className="px-3 py-2.5 border-b border-[var(--border)]">
+        <div className="flex items-center gap-2 p-2 rounded-lg bg-[var(--bg-hover)]">
           <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs font-bold text-indigo-300 flex-shrink-0">
             {candidate.initials}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-medium text-[var(--text-primary)] truncate">{candidate.shortName}</p>
-            <p className="text-[10px] text-[var(--text-muted)]">{candidate.title} · No. {candidate.nomorUrut}</p>
+            <p className="text-[10px] text-[var(--text-muted)]">{candidate.title} · Dapil Gorontalo</p>
           </div>
-          <div className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0 animate-pulse" />
+          <div className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0 animate-pulse" />
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-3 px-2">
-        <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest px-3 mb-2">Modul</p>
+      <nav className="flex-1 overflow-y-auto py-2 px-2">
+        <p className="text-[9px] font-semibold text-[var(--text-muted)] uppercase tracking-widest px-2 mb-1.5">Modul Platform</p>
         {modulData.map((m) => {
           const Icon = iconMap[m.id] || LayoutDashboard
           const colors = colorMap[m.color] || colorMap.indigo
           const isActive = activeModul === m.id
-          const isLocked = m.status === 'locked'
 
           return (
             <button
               key={m.id}
-              onClick={() => { if (!isLocked) { onSelect(m.id); setOpen(false) } }}
-              disabled={isLocked}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-left transition-all
+              onClick={() => { onSelect(m.id); setOpen(false) }}
+              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg mb-0.5 text-left transition-all
                 ${isActive
-                  ? 'bg-indigo-500/15 border border-indigo-500/25 text-[var(--text-primary)]'
-                  : isLocked
-                  ? 'opacity-35 cursor-not-allowed'
-                  : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  ? 'bg-indigo-500/12 border border-indigo-500/20 text-[var(--text-primary)]'
+                  : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent'
                 }`}
             >
-              <div className={`w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 ${isActive ? colors : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
-                <Icon size={14} />
+              <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 text-[11px] ${isActive ? colors : 'bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
+                <Icon size={13} />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-medium truncate">{m.name}</span>
-                  {m.alerts > 0 && (
-                    <span className="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-semibold leading-none">
-                      {m.alerts}
-                    </span>
-                  )}
-                  {isLocked && <span className="text-[9px] text-[var(--text-muted)]">🔒</span>}
-                </div>
+              <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                <span className="text-xs font-medium truncate">{m.name}</span>
+                {m.alerts > 0 && (
+                  <span className="text-[9px] bg-red-500/20 text-red-400 px-1 py-0.5 rounded-full font-semibold leading-none flex-shrink-0">
+                    {m.alerts}
+                  </span>
+                )}
               </div>
-              {isActive && <ChevronRight size={12} className="text-indigo-400 flex-shrink-0" />}
+              {isActive && <ChevronRight size={11} className="text-indigo-400 flex-shrink-0" />}
             </button>
           )
         })}
       </nav>
 
       {/* Bottom */}
-      <div className="px-2 py-3 border-t border-[var(--border)] space-y-0.5">
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
-          <Bell size={14} /><span className="text-xs">Notifikasi</span>
+      <div className="px-2 py-2 border-t border-[var(--border)] space-y-0.5">
+        <button
+          onClick={onToggleTheme}
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all"
+        >
+          {isDark
+            ? <Sun size={13} className="text-amber-400" />
+            : <Moon size={13} className="text-indigo-400" />
+          }
+          <span className="text-xs">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
-          <Settings size={14} /><span className="text-xs">Pengaturan</span>
+        <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
+          <Bell size={13} /><span className="text-xs">Notifikasi</span>
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-all">
-          <LogOut size={14} /><span className="text-xs">Keluar</span>
+        <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
+          <Settings size={13} /><span className="text-xs">Pengaturan</span>
+        </button>
+        <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-500/8 transition-all">
+          <LogOut size={13} /><span className="text-xs">Keluar</span>
         </button>
       </div>
     </div>
@@ -128,30 +124,27 @@ export default function Sidebar({ activeModul, onSelect }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile toggle */}
+      {/* Mobile hamburger */}
       <button
         onClick={() => setOpen(!open)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-9 h-9 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center"
+        className="lg:hidden fixed top-3.5 left-4 z-50 w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center"
       >
-        {open ? <X size={16} className="text-[var(--text-primary)]" /> : <Menu size={16} className="text-[var(--text-primary)]" />}
+        {open ? <X size={15} className="text-[var(--text-primary)]" /> : <Menu size={15} className="text-[var(--text-primary)]" />}
       </button>
 
       {/* Mobile overlay */}
       {open && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/60 z-40"
-          onClick={() => setOpen(false)}
-        />
+        <div className="lg:hidden fixed inset-0 bg-black/60 z-40" onClick={() => setOpen(false)} />
       )}
 
-      {/* Sidebar mobile */}
-      <aside className={`lg:hidden fixed left-0 top-0 h-full w-64 bg-[var(--bg-card)] border-r border-[var(--border)] z-40 transition-transform duration-200 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
-        <SidebarContent />
+      {/* Mobile sidebar */}
+      <aside className={`lg:hidden fixed left-0 top-0 h-full w-60 bg-[var(--bg-card)] border-r border-[var(--border)] z-40 transition-transform duration-200 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Content />
       </aside>
 
-      {/* Sidebar desktop */}
-      <aside className="hidden lg:flex flex-col w-56 xl:w-60 bg-[var(--bg-card)] border-r border-[var(--border)] h-screen sticky top-0 flex-shrink-0">
-        <SidebarContent />
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex flex-col w-56 xl:w-60 bg-[var(--bg-card)] border-r border-[var(--border)] h-screen sticky top-0 flex-shrink-0 transition-colors">
+        <Content />
       </aside>
     </>
   )
