@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  --bg-base:    #0d1117;
+  --bg-card:    #161c26;
+  --bg-hover:   #1c2434;
+  --border:     #232d3f;
+  --border-lit: #2e3b52;
+
+  --text-primary:   #e8edf5;
+  --text-secondary: #7a8aa0;
+  --text-muted:     #4a5568;
+
+  --indigo:  #6366f1;
+  --indigo-dim: #3730a3;
+  --green:   #22c55e;
+  --amber:   #f59e0b;
+  --red:     #ef4444;
+  --teal:    #14b8a6;
+  --purple:  #a855f7;
+  --pink:    #ec4899;
+  --orange:  #f97316;
+  --sky:     #38bdf8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-lit); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3d4f6b; }
+
+.animate-delay-1 { animation-delay: .05s; }
+.animate-delay-2 { animation-delay: .10s; }
+.animate-delay-3 { animation-delay: .15s; }
+.animate-delay-4 { animation-delay: .20s; }
+.animate-delay-5 { animation-delay: .25s; }
+.animate-delay-6 { animation-delay: .30s; }
+.animate-delay-7 { animation-delay: .35s; }
+.animate-delay-8 { animation-delay: .40s; }
+.animate-delay-9 { animation-delay: .45s; }
+.animate-delay-10 { animation-delay: .50s; }
