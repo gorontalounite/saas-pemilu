@@ -1,5 +1,4 @@
 'use client'
-import KonstituenModule from '@/components/konstituen/KonstituenModule'
 import { useState } from 'react'
 import { modulData, kabGorontalo } from '@/lib/data'
 import {
@@ -291,7 +290,7 @@ export default function ModulPage({ modulId, onBack }: Props) {
           </div>
         </div>
       </div>
-      {modulId === 'm8' && <KonstituenModule />}
+      {modulId === 'm8' && <KonstituenPanel />}
       {modulId === 'm2' && <GorontaloMap />}
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 flex items-center gap-3">
         <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-sm">🔨</div>
