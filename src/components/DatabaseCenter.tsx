@@ -105,7 +105,7 @@ function TableBlock({
 
   async function fetchRows() {
     setLoading(true)
-    const { data } = await supabase.from(tabel).select(cols.join(',')).limit(50).order('created_at' as any, { ascending:false }).catch(() => ({ data: [] }))
+    const { data } = await supabase.from(tabel).select(cols.join(',')).limit(50).order('created_at' as any, { ascending:false })
     setRows(data || [])
     setLoading(false)
   }
