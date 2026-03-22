@@ -1,4 +1,3 @@
-cat > ~/Documents/"Files v2"/saas-pemilu/src/components/Topbar.tsx << 'EOF'
 'use client'
 import { useState } from 'react'
 import { alerts } from '@/lib/data'
@@ -15,7 +14,7 @@ const phases = [
   { date:'Akhir 2027',  label:'Pencalonan anggota legislatif',     color:'bg-indigo-400' },
   { date:'2028',        label:'Masa kampanye',                     color:'bg-purple-400' },
   { date:'Jan 2029',    label:'Masa tenang (3 hari)',              color:'bg-amber-400' },
-  { date:'14 Feb 2029', label:'⭐ Hari Pemungutan Suara',          color:'bg-red-400' },
+  { date:'14 Feb 2029', label:'Hari Pemungutan Suara',             color:'bg-red-400' },
 ]
 
 interface Props {
@@ -46,20 +45,21 @@ export default function Topbar({ moduleName, appView, onSetView, isDark, onToggl
           <Clock size={12} />
           <span className="text-xs">{timeStr} · {dateStr}</span>
         </div>
-        <button onClick={() => setShowModal(true)}
+        <button
+          onClick={() => setShowModal(true)}
           className="hidden sm:flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full hover:bg-amber-500/15 transition-colors flex-shrink-0">
           <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-          <span className="text-xs font-medium text-amber-400">{daysLeft.toLocaleString('id-ID')} hari · 14 Feb 2029</span>
+          <span className="text-xs font-medium text-amber-400">{daysLeft.toLocaleString('id-ID')} hari lagi</span>
         </button>
-        <button onClick={() => onSetView(appView === 'database' ? 'main' : 'database')} title="Database Center"
+        <button onClick={() => onSetView(appView === 'database' ? 'main' : 'database')}
           className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all flex-shrink-0 ${appView === 'database' ? 'bg-teal-500/15 border-teal-500/30 text-teal-400' : 'border-[var(--border)] hover:bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
           <Database size={14} />
         </button>
-        <button onClick={() => onSetView(appView === 'rag' ? 'main' : 'rag')} title="RAG Knowledge"
+        <button onClick={() => onSetView(appView === 'rag' ? 'main' : 'rag')}
           className={`w-8 h-8 rounded-lg border flex items-center justify-center transition-all flex-shrink-0 ${appView === 'rag' ? 'bg-purple-500/15 border-purple-500/30 text-purple-400' : 'border-[var(--border)] hover:bg-[var(--bg-hover)] text-[var(--text-muted)]'}`}>
           <BookOpen size={14} />
         </button>
-        <button onClick={onToggleTheme} title="Toggle theme"
+        <button onClick={onToggleTheme}
           className="w-8 h-8 rounded-lg border border-[var(--border)] hover:bg-[var(--bg-hover)] flex items-center justify-center transition-all flex-shrink-0">
           {isDark ? <Sun size={14} className="text-amber-400" /> : <Moon size={14} className="text-[var(--text-secondary)]" />}
         </button>
@@ -77,28 +77,32 @@ export default function Topbar({ moduleName, appView, onSetView, isDark, onToggl
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
                 <Calendar size={18} className="text-amber-400" />
-                <h2 className="text-sm font-semibold text-[var(--text-primary)]">Timeline Kampanye — Pemilu 2029</h2>
+                <h2 className="text-sm font-semibold text-[var(--text-primary)]">Timeline Kampanye 2029</h2>
               </div>
-              <button onClick={() => setShowModal(false)} className="w-7 h-7 rounded-lg bg-[var(--bg-hover)] flex items-center justify-center"><X size={14} className="text-[var(--text-secondary)]" /></button>
+              <button onClick={() => setShowModal(false)} className="w-7 h-7 rounded-lg bg-[var(--bg-hover)] flex items-center justify-center">
+                <X size={14} className="text-[var(--text-secondary)]" />
+              </button>
             </div>
             <div className="grid grid-cols-3 gap-3 mb-5">
-              {[
-                { val: daysLeft.toLocaleString('id-ID'), lbl:'Hari tersisa', c:'text-indigo-400' },
-                { val: Math.floor(daysLeft/7).toLocaleString('id-ID'), lbl:'Minggu tersisa', c:'text-green-400' },
-                { val: '2029', lbl:'Pemilu Nasional', c:'text-amber-400' },
-              ].map((s,i) => (
-                <div key={i} className="bg-[var(--bg-hover)] rounded-xl p-3 text-center">
-                  <p className={`text-xl font-bold ${s.c}`}>{s.val}</p>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{s.lbl}</p>
-                </div>
-              ))}
+              <div className="bg-[var(--bg-hover)] rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-indigo-400">{daysLeft.toLocaleString('id-ID')}</p>
+                <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Hari tersisa</p>
+              </div>
+              <div className="bg-[var(--bg-hover)] rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-green-400">{Math.floor(daysLeft/7).toLocaleString('id-ID')}</p>
+                <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Minggu tersisa</p>
+              </div>
+              <div className="bg-[var(--bg-hover)] rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-amber-400">2029</p>
+                <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Pemilu Nasional</p>
+              </div>
             </div>
             <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">Tahapan Pemilu 2029</h3>
             {phases.map((p, i) => (
               <div key={i} className="flex gap-3 items-stretch">
                 <div className="flex flex-col items-center">
                   <div className={`w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${p.color}`} />
-                  {i < phases.length-1 && <div className="w-px flex-1 bg-[var(--border)] my-1" />}
+                  {i < phases.length - 1 && <div className="w-px flex-1 bg-[var(--border)] my-1" />}
                 </div>
                 <div className="pb-4 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -109,10 +113,14 @@ export default function Topbar({ moduleName, appView, onSetView, isDark, onToggl
               </div>
             ))}
             <div className="mt-4 pt-4 border-t border-[var(--border)]">
-              <p className="text-[11px] text-[var(--text-muted)] mb-3">Tambah kegiatan di Modul 9 → Profil Calon → Jadwal Kampanye</p>
+              <p className="text-[11px] text-[var(--text-muted)] mb-3">Tambah kegiatan di Modul 9 — Jadwal Kampanye</p>
               <div className="flex gap-2">
-                <input className="flex-1 bg-[var(--bg-hover)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text-primary)] outline-none focus:border-indigo-500 placeholder:text-[var(--text-muted)]" placeholder="Nama kegiatan kampanye..." />
-                <button className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs px-4 py-2 rounded-lg transition-colors font-medium">+ Tambah</button>
+                <input
+                  className="flex-1 bg-[var(--bg-hover)] border border-[var(--border)] rounded-lg px-3 py-2 text-xs text-[var(--text-primary)] outline-none focus:border-indigo-500 placeholder:text-[var(--text-muted)]"
+                  placeholder="Nama kegiatan kampanye..." />
+                <button className="bg-indigo-500 hover:bg-indigo-600 text-white text-xs px-4 py-2 rounded-lg transition-colors font-medium">
+                  Tambah
+                </button>
               </div>
             </div>
           </div>
@@ -121,5 +129,3 @@ export default function Topbar({ moduleName, appView, onSetView, isDark, onToggl
     </>
   )
 }
-EOF
-echo "Topbar.tsx done"
