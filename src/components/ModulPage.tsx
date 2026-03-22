@@ -123,68 +123,106 @@ function DataTable({ section, cols }: { section: string; cols: string[] }) {
 function GorontaloMap() {
   const [sel, setSel] = useState<string|null>(null)
   const selKab = kabGorontalo.find(k => k.id === sel)
-  const kc = (id: string) => sel === id
-    ? 'fill-indigo-500/50 stroke-indigo-300 stroke-[1.8]'
-    : 'fill-[var(--bg-hover)] stroke-[var(--border-lit)] stroke-[1] hover:fill-indigo-400/20 hover:stroke-indigo-400 cursor-pointer'
+
+  const kabColors: Record<string, { fill: string; stroke: string; mapSrc: string }> = {
+    gorut:      { fill:'#06b6d4', stroke:'#0891b2', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1021276.7257009968!2d121.96759887268229!3d0.8663637604616092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x327968d2ae4b4e3b%3A0x3030bfbcaf76f00!2sKabupaten%20Gorontalo%20Utara%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143293750!5m2!1sid!2sid' },
+    bone:       { fill:'#8b5cf6', stroke:'#7c3aed', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510672.62259982125!2d122.67114624166054!3d0.5568882941649742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x327ed976fe70d79f%3A0x3030bfbcaf76ee0!2sKabupaten%20Bone%20Bolango%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143328712!5m2!1sid!2sid' },
+    bonebol:    { fill:'#10b981', stroke:'#059669', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510662.1290144366!2d122.03778693685258!3d0.6671091748500295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3279a7aeaeda4ee1%3A0x3030bfbcaf76ed0!2sKabupaten%20Boalemo%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143405459!5m2!1sid!2sid' },
+    pohuwato:   { fill:'#3b82f6', stroke:'#2563eb', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510662.183131596!2d121.647892!3d0.6665875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3277628b1bb51ce5%3A0x3030bfbcaf76f10!2sKabupaten%20Pohuwato%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143393235!5m2!1sid!2sid' },
+    gorontalo:  { fill:'#f59e0b', stroke:'#d97706', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510658.6757165025!2d122.33230858517621!3d0.6995941303976962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32793df3e7b43eef%3A0x3030bfbcaf76ef0!2sKabupaten%20Gorontalo%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143277222!5m2!1sid!2sid' },
+    gortalkota: { fill:'#ef4444', stroke:'#dc2626', mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63834.162559348326!2d122.99873489216493!3d0.5490077866268024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32792b4799e5e75d%3A0x6dcc4d0923155967!2sGorontalo%2C%20Kabupaten%20Gorontalo%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143309383!5m2!1sid!2sid' },
+  }
+
+  const f = (id: string) => kabColors[id]?.fill || '#374151'
+  const s = (id: string) => sel === id ? '#ffffff' : (kabColors[id]?.stroke || '#1f2937')
+  const o = (id: string) => sel === null ? 0.7 : sel === id ? 1 : 0.25
+  const sw = (id: string) => sel === id ? 2 : 1
 
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5 mb-4">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">Peta TPS — Provinsi Gorontalo</h3>
-          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Klik wilayah untuk detail · Input data via Database Center</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Klik wilayah untuk lihat peta · 6 Kabupaten/Kota</p>
         </div>
+        {sel && (
+          <button onClick={() => setSel(null)} className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] underline">
+            Reset
+          </button>
+        )}
       </div>
+
       <div className="flex flex-col lg:flex-row gap-5">
+        {/* SVG Peta */}
         <div className="flex-1 flex items-center justify-center">
           <svg viewBox="0 0 480 220" className="w-full max-w-md" xmlns="http://www.w3.org/2000/svg">
-            <style>{'.kab{transition:fill .15s,stroke .15s}.kl{font-family:DM Sans,system-ui,sans-serif;pointer-events:none;text-anchor:middle;dominant-baseline:central;font-size:8.5px}'}</style>
-            <g onClick={() => setSel(s => s==='pohuwato'?null:'pohuwato')}>
-              <path className={`kab ${kc('pohuwato')}`} d="M18,148 L16,112 L26,85 L48,62 L72,50 L100,46 L118,56 L124,78 L120,106 L110,128 L90,142 L62,152 Z"/>
-              <text className="kl" x="72" y="102" fill="var(--text-secondary)">Pohuwato</text>
+            <style>{`.kab{transition:all .2s}.kl{font-family:system-ui,sans-serif;pointer-events:none;text-anchor:middle;dominant-baseline:central;font-size:8.5px;font-weight:700}`}</style>
+
+            {/* Pohuwato */}
+            <g onClick={() => setSel(s => s==='pohuwato' ? null : 'pohuwato')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M18,148 L16,112 L26,85 L48,62 L72,50 L100,46 L118,56 L124,78 L120,106 L110,128 L90,142 L62,152 Z"
+                style={{fill:f('pohuwato'), opacity:o('pohuwato'), stroke:s('pohuwato'), strokeWidth:sw('pohuwato')}}/>
+              <text className="kl" x="70" y="100" fill="white">Pohuwato</text>
             </g>
-            <g onClick={() => setSel(s => s==='bonebol'?null:'bonebol')}>
-              <path className={`kab ${kc('bonebol')}`} d="M118,56 L124,78 L120,106 L110,128 L136,136 L160,128 L172,108 L168,80 L152,58 L134,50 Z"/>
-              <text className="kl" x="144" y="96" fill="var(--text-secondary)">Boalemo</text>
+
+            {/* Boalemo */}
+            <g onClick={() => setSel(s => s==='bonebol' ? null : 'bonebol')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M118,56 L124,78 L120,106 L110,128 L136,136 L160,128 L172,108 L168,80 L152,58 L134,50 Z"
+                style={{fill:f('bonebol'), opacity:o('bonebol'), stroke:s('bonebol'), strokeWidth:sw('bonebol')}}/>
+              <text className="kl" x="144" y="96" fill="white">Boalemo</text>
             </g>
-            <g onClick={() => setSel(s => s==='gorontalo'?null:'gorontalo')}>
-              <path className={`kab ${kc('gorontalo')}`} d="M160,128 L172,108 L168,80 L196,74 L218,82 L228,102 L220,124 L200,136 L178,138 Z"/>
-              <text className="kl" x="196" y="108" fill="var(--text-secondary)">Kab.</text>
-              <text className="kl" x="196" y="120" fill="var(--text-secondary)">Gorontalo</text>
+
+            {/* Kab. Gorontalo */}
+            <g onClick={() => setSel(s => s==='gorontalo' ? null : 'gorontalo')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M160,128 L172,108 L168,80 L196,74 L218,82 L228,102 L220,124 L200,136 L178,138 Z"
+                style={{fill:f('gorontalo'), opacity:o('gorontalo'), stroke:s('gorontalo'), strokeWidth:sw('gorontalo')}}/>
+              <text className="kl" x="196" y="106" fill="white">Kab.</text>
+              <text className="kl" x="196" y="118" fill="white">Gorontalo</text>
             </g>
-            <g onClick={() => setSel(s => s==='gortalkota'?null:'gortalkota')}>
-              <path className={`kab ${kc('gortalkota')}`} d="M218,82 L236,78 L244,90 L238,106 L228,102 Z"/>
-              <text className="kl" x="232" y="94" fill="var(--text-secondary)" fontSize="7">Kota</text>
+
+            {/* Kota Gorontalo */}
+            <g onClick={() => setSel(s => s==='gortalkota' ? null : 'gortalkota')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M218,82 L236,78 L244,90 L238,106 L228,102 Z"
+                style={{fill:f('gortalkota'), opacity:o('gortalkota'), stroke:s('gortalkota'), strokeWidth:sw('gortalkota')}}/>
+              <text className="kl" x="234" y="93" fill="white" fontSize="7">Kota</text>
             </g>
-            <g onClick={() => setSel(s => s==='bone'?null:'bone')}>
-              <path className={`kab ${kc('bone')}`} d="M228,102 L238,106 L244,90 L272,86 L300,96 L312,116 L304,138 L280,148 L254,144 L236,130 L220,124 Z"/>
-              <text className="kl" x="270" y="118" fill="var(--text-secondary)">Bone Bolango</text>
+
+            {/* Bone Bolango */}
+            <g onClick={() => setSel(s => s==='bone' ? null : 'bone')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M228,102 L238,106 L244,90 L272,86 L300,96 L312,116 L304,138 L280,148 L254,144 L236,130 L220,124 Z"
+                style={{fill:f('bone'), opacity:o('bone'), stroke:s('bone'), strokeWidth:sw('bone')}}/>
+              <text className="kl" x="270" y="116" fill="white">Bone Bolango</text>
             </g>
-            <g onClick={() => setSel(s => s==='gorut'?null:'gorut')}>
-              <path className={`kab ${kc('gorut')}`} d="M72,50 L100,46 L118,56 L134,50 L152,58 L168,80 L196,74 L218,82 L236,78 L272,86 L308,78 L338,60 L355,40 L340,22 L305,14 L260,10 L215,12 L172,18 L138,26 L108,34 L82,40 Z"/>
-              <text className="kl" x="215" y="48" fill="var(--text-secondary)">Gorontalo Utara</text>
+
+            {/* Gorontalo Utara */}
+            <g onClick={() => setSel(s => s==='gorut' ? null : 'gorut')} style={{cursor:'pointer'}}>
+              <path className="kab" d="M72,50 L100,46 L118,56 L134,50 L152,58 L168,80 L196,74 L218,82 L236,78 L272,86 L308,78 L338,60 L355,40 L340,22 L305,14 L260,10 L215,12 L172,18 L138,26 L108,34 L82,40 Z"
+                style={{fill:f('gorut'), opacity:o('gorut'), stroke:s('gorut'), strokeWidth:sw('gorut')}}/>
+              <text className="kl" x="215" y="46" fill="white">Gorontalo Utara</text>
             </g>
-            <text fontSize="8" fill="var(--text-muted)" fontFamily="DM Sans,sans-serif" x="42" y="190">Teluk Tomini</text>
-            <text fontSize="8" fill="var(--text-muted)" fontFamily="DM Sans,sans-serif" x="160" y="205">Laut Sulawesi (Utara)</text>
-            <text fontSize="10" fill="var(--text-muted)" fontFamily="DM Sans,sans-serif" x="418" y="30">N</text>
-            <line x1="424" y1="33" x2="424" y2="48" stroke="var(--text-muted)" strokeWidth="1"/>
+
+            <text fontSize="8" fill="#6b7280" fontFamily="system-ui" x="42" y="190">Teluk Tomini</text>
+            <text fontSize="8" fill="#6b7280" fontFamily="system-ui" x="155" y="208">Laut Sulawesi</text>
           </svg>
         </div>
+
+        {/* Legend */}
         <div className="lg:w-44 flex-shrink-0">
           <p className="text-[9px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">6 Kabupaten / Kota</p>
           <div className="space-y-1">
             {kabGorontalo.map(k => (
-              <button key={k.id} onClick={() => setSel(s => s===k.id?null:k.id)}
-                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all border ${sel===k.id ? 'bg-indigo-500/12 border-indigo-500/20 text-indigo-300' : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] border-transparent'}`}>
-                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${sel===k.id ? 'bg-indigo-400' : 'bg-[var(--border-lit)]'}`} />
-                <span className="text-[11px] truncate flex-1">{k.name}</span>
+              <button key={k.id} onClick={() => setSel(s => s===k.id ? null : k.id)}
+                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all border ${sel===k.id ? 'border-[var(--border-lit)] bg-[var(--bg-hover)]' : 'hover:bg-[var(--bg-hover)] border-transparent'}`}>
+                <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{backgroundColor: kabColors[k.id]?.fill || '#374151'}} />
+                <span className="text-[11px] truncate flex-1 text-[var(--text-secondary)]">{k.name}</span>
                 <span className="text-[10px] text-[var(--text-muted)]">0 TPS</span>
               </button>
             ))}
           </div>
+
           {selKab && (
-            <div className="mt-3 p-3 bg-indigo-500/8 border border-indigo-500/20 rounded-xl">
-              <p className="text-xs font-semibold text-indigo-300 mb-2">{selKab.name}</p>
+            <div className="mt-3 p-3 rounded-xl border" style={{borderColor: kabColors[selKab.id]?.fill + '40', backgroundColor: kabColors[selKab.id]?.fill + '12'}}>
+              <p className="text-xs font-semibold mb-2" style={{color: kabColors[selKab.id]?.fill}}>{selKab.name}</p>
               <div className="space-y-1.5 text-[11px]">
                 {[['DPT','—'],['TPS','—'],['Target suara','—'],['Relawan','—']].map(([l,v]) => (
                   <div key={l} className="flex justify-between">
@@ -197,21 +235,46 @@ function GorontaloMap() {
           )}
         </div>
       </div>
+
+      {/* Google Maps embed */}
+      {sel && kabColors[sel]?.mapSrc && (
+        <div className="mt-4 pt-4 border-t border-[var(--border)]">
+          <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">
+            Peta Google Maps — {kabGorontalo.find(k => k.id === sel)?.name}
+          </p>
+          <div className="rounded-xl overflow-hidden border border-[var(--border)]">
+            <iframe
+              src={kabColors[sel].mapSrc}
+              width="100%"
+              height="320"
+              style={{border:0, display:'block'}}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Bar chart DPT */}
       <div className="mt-4 pt-4 border-t border-[var(--border)]">
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-semibold text-[var(--text-primary)]">Distribusi DPT per Kabupaten/Kota</p>
-          <BarChart size={13} className="text-[var(--text-muted)]" />
         </div>
         <div className="flex items-end gap-2" style={{height:'56px'}}>
           {kabGorontalo.map(k => (
-            <div key={k.id} onClick={() => setSel(s => s===k.id?null:k.id)}
-              className="flex-1 flex flex-col items-center gap-1 cursor-pointer group">
-              <div className={`w-full rounded-t-sm border transition-colors ${sel===k.id ? 'bg-indigo-500/40 border-indigo-500/40' : 'bg-[var(--bg-hover)] border-[var(--border)] group-hover:bg-indigo-500/15'}`} style={{height:'40px'}} />
-              <span className="text-[8px] text-[var(--text-muted)] text-center">{k.name.split(' ').slice(-1)[0]}</span>
+            <div key={k.id} onClick={() => setSel(s => s===k.id ? null : k.id)}
+              className="flex-1 flex flex-col items-center gap-1 cursor-pointer">
+              <div className="w-full rounded-t-sm transition-opacity" style={{
+                height:'40px',
+                backgroundColor: kabColors[k.id]?.fill || '#374151',
+                opacity: sel === null ? 0.6 : sel === k.id ? 1 : 0.2,
+              }}/>
+              <span className="text-[8px] text-[var(--text-muted)] text-center leading-tight">{k.name.split(' ').slice(-1)[0]}</span>
             </div>
           ))}
         </div>
-        <p className="text-[10px] text-[var(--text-muted)] text-center mt-2">Chart terisi otomatis setelah data DPT diimport</p>
+        <p className="text-[10px] text-[var(--text-muted)] text-center mt-2">Terisi otomatis setelah data DPT diimport</p>
       </div>
     </div>
   )
