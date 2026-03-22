@@ -40,10 +40,18 @@ export default function DashboardOverview({ onNavigate }: Props) {
   const criticalCount = typedAlerts.filter(a => a.level === 'critical').length
   const selKab = kabGorontalo.find(k => k.id === selectedKab)
 
-  const kabColor = (id: string) =>
-    selectedKab === id
-      ? 'fill-indigo-500 stroke-indigo-300'
-      : 'fill-[var(--bg-hover)] stroke-[var(--border-lit)] hover:fill-indigo-500/20 hover:stroke-indigo-400 cursor-pointer'
+  const kabColors: Record<string,{fill:string;stroke:string}> = {
+    gorut:      {fill:'#06b6d4', stroke:'#0891b2'},
+    bone:       {fill:'#8b5cf6', stroke:'#7c3aed'},
+    bonebol:    {fill:'#10b981', stroke:'#059669'},
+    pohuwato:   {fill:'#3b82f6', stroke:'#2563eb'},
+    gorontalo:  {fill:'#f59e0b', stroke:'#d97706'},
+    gortalkota: {fill:'#ef4444', stroke:'#dc2626'},
+  }
+  const kf = (id:string) => kabColors[id]?.fill || '#374151'
+  const ks = (id:string) => selectedKab===id ? '#ffffff' : (kabColors[id]?.stroke || '#1f2937')
+  const ko = (id:string) => selectedKab===null ? 0.7 : selectedKab===id ? 1 : 0.25
+  const kw = (id:string) => selectedKab===id ? 2 : 1
 
   return (
     <div className="space-y-5">
@@ -107,43 +115,37 @@ export default function DashboardOverview({ onNavigate }: Props) {
 
             {/* Pohuwato */}
             <g onClick={() => setSelectedKab(s => s === 'pohuwato' ? null : 'pohuwato')}>
-              <path className={`kab ${kabColor('pohuwato')}`}
-                d="M20,85 L22,55 L50,32 L88,28 L100,45 L105,75 L95,90 L70,95 L45,98 Z"/>
+              <path className="kab" d="M20,85 L22,55 L50,32 L88,28 L100,45 L105,75 L95,90 L70,95 L45,98 Z" style={{fill:kf('pohuwato'),opacity:ko('pohuwato'),stroke:ks('pohuwato'),strokeWidth:kw('pohuwato')}}/>
               <text className="kab-lbl" x="62" y="65" fill="currentColor" style={{color:'var(--text-secondary)'}}>Pohuwato</text>
             </g>
 
             {/* Boalemo */}
             <g onClick={() => setSelectedKab(s => s === 'bonebol' ? null : 'bonebol')}>
-              <path className={`kab ${kabColor('bonebol')}`}
-                d="M100,45 L105,75 L95,90 L128,98 L148,92 L158,72 L152,48 L130,35 Z"/>
+              <path className="kab" d="M100,45 L105,75 L95,90 L128,98 L148,92 L158,72 L152,48 L130,35 Z" style={{fill:kf('bonebol'),opacity:ko('bonebol'),stroke:ks('bonebol'),strokeWidth:kw('bonebol')}}/>
               <text className="kab-lbl" x="130" y="70" fill="currentColor" style={{color:'var(--text-secondary)'}}>Boalemo</text>
             </g>
 
             {/* Kab. Gorontalo */}
             <g onClick={() => setSelectedKab(s => s === 'gorontalo' ? null : 'gorontalo')}>
-              <path className={`kab ${kabColor('gorontalo')}`}
-                d="M148,92 L158,72 L195,68 L215,78 L224,98 L212,116 L188,124 L162,112 Z"/>
+              <path className="kab" d="M148,92 L158,72 L195,68 L215,78 L224,98 L212,116 L188,124 L162,112 Z" style={{fill:kf('gorontalo'),opacity:ko('gorontalo'),stroke:ks('gorontalo'),strokeWidth:kw('gorontalo')}}/>
               <text className="kab-lbl" x="190" y="96" fill="currentColor" style={{color:'var(--text-secondary)'}}>Kab. Gorontalo</text>
             </g>
 
             {/* Kota Gorontalo (kecil) */}
             <g onClick={() => setSelectedKab(s => s === 'gortalkota' ? null : 'gortalkota')}>
-              <path className={`kab ${kabColor('gortalkota')}`}
-                d="M215,78 L234,74 L244,88 L232,102 L224,98 Z"/>
+              <path className="kab" d="M215,78 L234,74 L244,88 L232,102 L224,98 Z" style={{fill:kf('gortalkota'),opacity:ko('gortalkota'),stroke:ks('gortalkota'),strokeWidth:kw('gortalkota')}}/>
               <text className="kab-lbl" x="230" y="89" fill="currentColor" style={{color:'var(--text-secondary)', fontSize:'7px'}}>Kota</text>
             </g>
 
             {/* Bone Bolango */}
             <g onClick={() => setSelectedKab(s => s === 'bone' ? null : 'bone')}>
-              <path className={`kab ${kabColor('bone')}`}
-                d="M224,98 L244,88 L285,86 L315,98 L325,118 L305,136 L272,140 L248,128 Z"/>
+              <path className="kab" d="M224,98 L244,88 L285,86 L315,98 L325,118 L305,136 L272,140 L248,128 Z" style={{fill:kf('bone'),opacity:ko('bone'),stroke:ks('bone'),strokeWidth:kw('bone')}}/>
               <text className="kab-lbl" x="276" y="112" fill="currentColor" style={{color:'var(--text-secondary)'}}>Bone Bolango</text>
             </g>
 
             {/* Gorontalo Utara (memanjang di utara) */}
             <g onClick={() => setSelectedKab(s => s === 'gorut' ? null : 'gorut')}>
-              <path className={`kab ${kabColor('gorut')}`}
-                d="M88,28 L100,45 L130,35 L152,48 L195,68 L215,78 L234,74 L285,86 L315,78 L355,62 L375,42 L360,22 L320,14 L258,10 L195,12 L148,18 L115,24 Z"/>
+              <path className="kab" d="M88,28 L100,45 L130,35 L152,48 L195,68 L215,78 L234,74 L285,86 L315,78 L355,62 L375,42 L360,22 L320,14 L258,10 L195,12 L148,18 L115,24 Z" style={{fill:kf('gorut'),opacity:ko('gorut'),stroke:ks('gorut'),strokeWidth:kw('gorut')}}/>
               <text className="kab-lbl" x="224" y="44" fill="currentColor" style={{color:'var(--text-secondary)'}}>Gorontalo Utara</text>
             </g>
 
@@ -160,9 +162,9 @@ export default function DashboardOverview({ onNavigate }: Props) {
                 <button
                   key={k.id}
                   onClick={() => setSelectedKab(s => s === k.id ? null : k.id)}
-                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors text-[11px] ${selectedKab === k.id ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/20' : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]'}`}
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors text-[11px] ${selectedKab===k.id ? 'bg-[var(--bg-hover)] border border-[var(--border-lit)]' : 'hover:bg-[var(--bg-hover)] border border-transparent'} text-[var(--text-secondary)]`}
                 >
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${selectedKab === k.id ? 'bg-indigo-400' : 'bg-[var(--border-lit)]'}`} />
+                  <div style={{width:'8px',height:'8px',borderRadius:'50%',flexShrink:0,backgroundColor:kabColors[k.id]?.fill||'#374151',opacity:selectedKab===null||selectedKab===k.id?1:0.3}} />
                   <span className="truncate">{k.name}</span>
                   <span className="ml-auto text-[10px] text-[var(--text-muted)]">DPT: —</span>
                 </button>
