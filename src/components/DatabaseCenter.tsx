@@ -79,7 +79,7 @@ function EmptyTable({ columns }: { columns: string[] }) {
 // ── Schema accordion per modul ──────────────────────────────────────────────────
 function ModulSchema({ modul }: { modul: typeof modulData[0] }) {
   const [open, setOpen] = useState(false)
-  const sections = (modulFields as any)[modul.id] || []
+  const sections = []
   const totalFields = sections.reduce((a: number, s: any) => a + s.fields.length, 0)
   const Icon = iconMap[modul.id] || LayoutDashboard
 
@@ -216,7 +216,7 @@ export default function DatabaseCenter({ onBack }: Props) {
   const [filter, setFilter] = useState<string>('all')
   const modules = modulData.filter(m => m.id !== 'm0')
   const totalFields = modules.reduce((acc, m) => {
-    const secs = (modulFields as any)[m.id] || []
+    const secs = []
     return acc + secs.reduce((a: number, s: any) => a + s.fields.length, 0)
   }, 0)
 
