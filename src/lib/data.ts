@@ -44,7 +44,7 @@ export const elektabilitasChart: any[] = []
 
 export const budgetPos: any[] = []
 
-export const kabGorontalo = [
+export const provinsiGorontalo = [
   { id: 'gorut',       name: 'Gorontalo Utara', dpt: 92601,  tps: 245, est_suara: 0 },
   { id: 'bone',        name: 'Bone Bolango',     dpt: 124546, tps: 294, est_suara: 0 },
   { id: 'bonebol',     name: 'Boalemo',          dpt: 108411, tps: 242, est_suara: 0 },

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
-import { kabGorontalo } from '@/lib/data'
+import { provinsiGorontalo } from '@/lib/data'
 import { ArrowLeft, Map, ChevronDown, ChevronUp, Loader2, Users, MapPin } from 'lucide-react'
 
 interface KabData { nama: string; jumlah_tps: number; jumlah_dpt: number }
@@ -96,7 +96,7 @@ export default function PetaSuara({ onBack }: Props) {
       <div>
         <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">Pilih Kabupaten / Kota</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-          {kabGorontalo.map(k => {
+          {provinsiGorontalo.map(k => {
             const d = kabData[k.name]
             const isActive = selectedKab === k.name
             return (

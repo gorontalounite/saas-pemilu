@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { modulData, kabGorontalo } from '@/lib/data'
+import { modulData, provinsiGorontalo } from '@/lib/data'
 import { createClient } from '@/lib/supabase'
 import { useTenant } from '@/contexts/TenantContext'
 import {
@@ -109,7 +109,7 @@ export default function DashboardOverview({ onNavigate }: Props) {
     setLoading(false)
   }
 
-  const selKab = kabGorontalo.find(k => k.id === selectedKab)
+  const selKab = provinsiGorontalo.find(k => k.id === selectedKab)
   const kf = (id: string) => kabColors[id]?.fill || '#374151'
   const ks = (id: string) => selectedKab === id ? '#ffffff' : (kabColors[id]?.stroke || '#1f2937')
   const ko = (id: string) => selectedKab === null ? 0.7 : selectedKab === id ? 1 : 0.25
@@ -242,7 +242,7 @@ export default function DashboardOverview({ onNavigate }: Props) {
           <div className="w-full lg:w-48 flex-shrink-0">
             <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">Kabupaten / Kota</p>
             <div className="space-y-1">
-              {kabGorontalo.map(k => (
+              {provinsiGorontalo.map(k => (
                 <button key={k.id} onClick={() => setSelectedKab(s => s===k.id?null:k.id)}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors text-[11px] border ${selectedKab===k.id ? 'bg-[var(--bg-hover)] border-[var(--border-lit)]' : 'hover:bg-[var(--bg-hover)] border-transparent'} text-[var(--text-secondary)]`}>
                   <div style={{width:'8px',height:'8px',borderRadius:'50%',flexShrink:0,backgroundColor:kabColors[k.id]?.fill||'#374151',opacity:selectedKab===null||selectedKab===k.id?1:0.3}} />

@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { modulData, kabGorontalo } from '@/lib/data'
+import { modulData, provinsiGorontalo } from '@/lib/data'
 import {
   Users, Map, Megaphone, ClipboardCheck, BarChart2,
   Wallet, Radio, Heart, UserCircle, LayoutDashboard,
@@ -122,7 +122,7 @@ function DataTable({ section, cols }: { section: string; cols: string[] }) {
 
 function GorontaloMap() {
   const [sel, setSel] = useState<string|null>(null)
-  const selKab = kabGorontalo.find(k => k.id === sel)
+  const selKab = provinsiGorontalo.find(k => k.id === sel)
   const kabColors: Record<string,{fill:string;stroke:string;mapSrc:string}> = {
     gorut:     {fill:'#06b6d4',stroke:'#0891b2',mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1021276.7257009968!2d121.96759887268229!3d0.8663637604616092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x327968d2ae4b4e3b%3A0x3030bfbcaf76f00!2sKabupaten%20Gorontalo%20Utara%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143293750!5m2!1sid!2sid'},
     bone:      {fill:'#8b5cf6',stroke:'#7c3aed',mapSrc:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510672.62259982125!2d122.67114624166054!3d0.5568882941649742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x327ed976fe70d79f%3A0x3030bfbcaf76ee0!2sKabupaten%20Bone%20Bolango%2C%20Gorontalo!5e0!3m2!1sid!2sid!4v1774143328712!5m2!1sid!2sid'},
@@ -179,7 +179,7 @@ function GorontaloMap() {
         <div className="lg:w-44 flex-shrink-0">
           <p className="text-[9px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">6 Kabupaten / Kota</p>
           <div className="space-y-1">
-            {kabGorontalo.map(k => (
+            {provinsiGorontalo.map(k => (
               <button key={k.id} onClick={() => setSel(s => s===k.id?null:k.id)}
                 className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all border ${sel===k.id?'border-[var(--border-lit)] bg-[var(--bg-hover)]':'hover:bg-[var(--bg-hover)] border-transparent'}`}>
                 <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{backgroundColor:kabColors[k.id]?.fill||'#374151'}}/>
@@ -205,7 +205,7 @@ function GorontaloMap() {
       </div>
       {sel && kabColors[sel]?.mapSrc && (
         <div className="mt-4 pt-4 border-t border-[var(--border)]">
-          <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">{kabGorontalo.find(k=>k.id===sel)?.name}</p>
+          <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">{provinsiGorontalo.find(k=>k.id===sel)?.name}</p>
           <div className="rounded-xl overflow-hidden border border-[var(--border)]">
             <iframe src={kabColors[sel].mapSrc} width="100%" height="300" style={{border:0,display:'block'}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"/>
           </div>
@@ -214,7 +214,7 @@ function GorontaloMap() {
       <div className="mt-4 pt-4 border-t border-[var(--border)]">
         <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">Distribusi DPT per Kabupaten/Kota</p>
         <div className="flex items-end gap-2" style={{height:'56px'}}>
-          {kabGorontalo.map(k => (
+          {provinsiGorontalo.map(k => (
             <div key={k.id} onClick={() => setSel(s=>s===k.id?null:k.id)} className="flex-1 flex flex-col items-center gap-1 cursor-pointer">
               <div className="w-full rounded-t-sm transition-opacity" style={{height:'40px',backgroundColor:kabColors[k.id]?.fill||'#374151',opacity:sel===null?0.6:sel===k.id?1:0.2}}/>
               <span className="text-[8px] text-[var(--text-muted)] text-center leading-tight">{k.name.split(' ').slice(-1)[0]}</span>
