@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { TenantProvider } from '@/contexts/TenantContext'
 
 export const metadata: Metadata = {
   title: 'KampanyeOS',
@@ -9,7 +10,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <TenantProvider>
+          {children}
+        </TenantProvider>
+      </body>
     </html>
   )
 }
