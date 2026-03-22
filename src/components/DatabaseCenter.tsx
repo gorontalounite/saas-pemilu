@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { modulData, modulFields } from '@/lib/data'
+import { modulData } from '@/lib/data'
 import {
   ArrowLeft, Database, ChevronDown, ChevronUp,
   Users, Map, Megaphone, ClipboardCheck, BarChart2,
