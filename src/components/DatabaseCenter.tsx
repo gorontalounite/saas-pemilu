@@ -216,7 +216,7 @@ export default function DatabaseCenter({ onBack }: Props) {
   const [filter, setFilter] = useState<string>('all')
   const modules = modulData.filter(m => m.id !== 'm0')
   const totalFields = modules.reduce((acc, m) => {
-    const secs = []
+    const secs: any[] = []
     return acc + secs.reduce((a: number, s: any) => a + s.fields.length, 0)
   }, 0)
 
