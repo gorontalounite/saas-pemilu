@@ -1,3 +1,4 @@
+cat > ~/Documents/"Files v2"/saas-pemilu/src/components/Topbar.tsx << 'EOF'
 'use client'
 import { useState } from 'react'
 import { alerts } from '@/lib/data'
@@ -120,3 +121,5 @@ export default function Topbar({ moduleName, appView, onSetView, isDark, onToggl
     </>
   )
 }
+EOF
+echo "Topbar.tsx done"
