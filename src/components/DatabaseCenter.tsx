@@ -79,7 +79,7 @@ function EmptyTable({ columns }: { columns: string[] }) {
 // ── Schema accordion per modul ──────────────────────────────────────────────────
 function ModulSchema({ modul }: { modul: typeof modulData[0] }) {
   const [open, setOpen] = useState(false)
-  const sections = []
+  const sections: any[] = []
   const totalFields = sections.reduce((a: number, s: any) => a + s.fields.length, 0)
   const Icon = iconMap[modul.id] || LayoutDashboard
 
