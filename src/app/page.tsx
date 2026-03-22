@@ -6,6 +6,7 @@ import DashboardOverview from '@/components/DashboardOverview'
 import ModulPage from '@/components/ModulPage'
 import DatabaseCenter from '@/components/DatabaseCenter'
 import RAGKnowledge from '@/components/RAGKnowledge'
+import PetaSuara from '@/components/PetaSuara'
 import { modulData } from '@/lib/data'
 
 export type AppView = 'main' | 'database' | 'rag'
@@ -13,7 +14,7 @@ export type AppView = 'main' | 'database' | 'rag'
 export default function Home() {
   const [activeModul, setActiveModul] = useState('m0')
   const [appView, setAppView] = useState<AppView>('main')
-  const [isDark, setIsDark] = useState(true)
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
     document.documentElement.classList.toggle('light', !isDark)
@@ -52,6 +53,8 @@ export default function Home() {
               <RAGKnowledge onBack={() => setAppView('main')} />
             ) : activeModul === 'm0' ? (
               <DashboardOverview onNavigate={(id) => { setActiveModul(id); setAppView('main') }} />
+            ) : activeModul === 'm10' ? (
+              <PetaSuara onBack={() => setActiveModul('m0')} />
             ) : (
               <ModulPage modulId={activeModul} onBack={() => setActiveModul('m0')} />
             )}
