@@ -75,6 +75,10 @@ export default function DashboardOverview({ onNavigate }: Props) {
         ))}
       </div>
 
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
+        <PetaGorontalo onNavigate={onNavigate} />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
           <div className="flex items-center justify-between mb-5">
@@ -158,10 +162,6 @@ export default function DashboardOverview({ onNavigate }: Props) {
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
-        <PetaGorontalo onNavigate={onNavigate} />
       </div>
 
       <div>
