@@ -7,8 +7,6 @@ import ModulPage from '@/components/ModulPage'
 import DatabaseCenter from '@/components/DatabaseCenter'
 import RAGKnowledge from '@/components/RAGKnowledge'
 import PetaSuara from '@/components/PetaSuara'
-import ChatbotARIA from '@/components/ChatbotARIA'
-import MediaMonitoring from '@/components/MediaMonitoring'
 import { modulData } from '@/lib/data'
 
 export type AppView = 'main' | 'database' | 'rag'
@@ -57,10 +55,6 @@ export default function Home() {
               <DashboardOverview onNavigate={(id) => { setActiveModul(id); setAppView('main') }} />
             ) : activeModul === 'm10' ? (
               <PetaSuara onBack={() => setActiveModul('m0')} />
-            ) : activeModul === 'm11' ? (
-              <ChatbotARIA onBack={() => setActiveModul('m0')} />
-            ) : activeModul === 'm12' ? (
-              <MediaMonitoring onBack={() => setActiveModul('m0')} />
             ) : (
               <ModulPage modulId={activeModul} onBack={() => setActiveModul('m0')} />
             )}
