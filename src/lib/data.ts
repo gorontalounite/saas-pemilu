@@ -47,10 +47,11 @@ export const elektabilitasChart: any[] = []
 export const budgetPos: any[] = []
 
 export const kabGorontalo = [
-  { id: 'gorut',       name: 'Gorontalo Utara', dpt: 92601,  tps: 245, est_suara: 0 },
-  { id: 'bone',        name: 'Bone Bolango',     dpt: 124546, tps: 294, est_suara: 0 },
-  { id: 'bonebol',     name: 'Boalemo',          dpt: 108411, tps: 242, est_suara: 0 },
-  { id: 'pohuwato',    name: 'Pohuwato',          dpt: 111411, tps: 258, est_suara: 0 },
-  { id: 'gorontalo',   name: 'Kab. Gorontalo',   dpt: 301041, tps: 701, est_suara: 0 },
-  { id: 'gortalkota',  name: 'Kota Gorontalo',   dpt: 146070, tps: 276, est_suara: 0 },
+  { id: 'gorontalo',   name: 'Kab. Gorontalo',   kecamatan: 19, desa_kel: 205, tps: 1205, dpt_l: 149072, dpt_p: 151178, dpt: 300250, est_suara: 0 },
+  { id: 'bonebol',     name: 'Boalemo',           kecamatan: 7,  desa_kel: 82,  tps: 424,  dpt_l: 54959,  dpt_p: 53433,  dpt: 108392, est_suara: 0 },
+  { id: 'bone',        name: 'Bone Bolango',      kecamatan: 18, desa_kel: 165, tps: 509,  dpt_l: 60856,  dpt_p: 61917,  dpt: 122773, est_suara: 0 },
+  { id: 'pohuwato',    name: 'Pohuwato',           kecamatan: 13, desa_kel: 104, tps: 439,  dpt_l: 56336,  dpt_p: 55130,  dpt: 111466, est_suara: 0 },
+  { id: 'gorut',       name: 'Gorontalo Utara',   kecamatan: 11, desa_kel: 123, tps: 412,  dpt_l: 46233,  dpt_p: 46031,  dpt: 92264,  est_suara: 0 },
+  { id: 'gortalkota',  name: 'Kota Gorontalo',    kecamatan: 9,  desa_kel: 50,  tps: 550,  dpt_l: 71226,  dpt_p: 74835,  dpt: 146061, est_suara: 0 },
 ]
+export const totalProvinsi = { kecamatan: 77, desa_kel: 729, tps: 3539, dpt_l: 438682, dpt_p: 442524, dpt: 881206 }
