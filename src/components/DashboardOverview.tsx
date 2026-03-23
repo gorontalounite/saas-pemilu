@@ -1,5 +1,6 @@
 'use client'
 import { modulData, alerts, candidate } from '@/lib/data'
+import PetaGorontalo from '@/components/PetaGorontalo'
 import {
   AlertCircle, AlertTriangle, Info,
   Users, Map, Megaphone, ClipboardCheck,
@@ -157,6 +158,10 @@ export default function DashboardOverview({ onNavigate }: Props) {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-5">
+        <PetaGorontalo onNavigate={onNavigate} />
       </div>
 
       <div>
