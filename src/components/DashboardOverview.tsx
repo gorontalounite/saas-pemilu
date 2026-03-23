@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { modulData } from '@/lib/data'
+import { modulData, kabGorontalo } from '@/lib/data'
 import { createClient } from '@/lib/supabase'
 import { useTenant } from '@/contexts/TenantContext'
 import {
