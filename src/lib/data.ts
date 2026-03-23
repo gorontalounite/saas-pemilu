@@ -23,7 +23,7 @@ export const statsKartu = [
 ]
 
 export const modulData = [
-  { id:'m0',num:'00',name:'Dashboard Master',     desc:'Command center — semua modul dalam satu pandang',      color:'indigo',status:'active', health:100,alerts:0,stats:'11 modul aktif' },
+  { id:'m0',num:'00',name:'Dashboard Master',     desc:'Command center — semua modul dalam satu pandang',      color:'indigo',status:'active', health:100,alerts:0,stats:'13 modul aktif' },
   { id:'m9',num:'09',name:'Profil Calon',          desc:'Identitas, visi misi, program kerja & jadwal kampanye', color:'purple',status:'active', health:0,  alerts:0,stats:'Belum ada data profil' },
   { id:'m1',num:'01',name:'Relawan & Posko',       desc:'Database, absensi, tugas & broadcast WA',              color:'green', status:'active', health:0,  alerts:0,stats:'Database relawan & posko' },
   { id:'m2',num:'02',name:'Pemetaan Pemilih',      desc:'Peta TPS Gorontalo, DPT, segmentasi & canvassing',     color:'sky',   status:'active', health:0,  alerts:0,stats:'Peta TPS & pemetaan pemilih' },
@@ -33,6 +33,8 @@ export const modulData = [
   { id:'m6',num:'06',name:'Keuangan & Budget',     desc:'RAB, approval, LPPDK & cost per vote',                color:'amber', status:'active', health:0,  alerts:0,stats:'RAB, transaksi & LPPDK' },
   { id:'m7',num:'07',name:'War Room',              desc:'Pusat komando, laporan harian & crisis room',          color:'red',   status:'active', health:100,alerts:0,stats:'Crisis room & war room' },
   { id:'m10',num:'10',name:'Peta Suara & Referensi', desc:'TPS, DPT, partai, perolehan suara historis & kompetitor', color:'blue',  status:'active', health:0,  alerts:0,stats:'Data historis 2019 tersedia' },
+  { id:'m11',num:'11',name:'Chatbot ARIA',           desc:'Asisten AI kampanye — tanya jawab, RAG knowledge, WA bot', color:'violet', status:'active', health:0,  alerts:0,stats:'AI siap diakses' },
+  { id:'m12',num:'12',name:'Media Monitoring',       desc:'Berita, sosmed, sentimen, kompetitor & head-to-head analytics', color:'rose',   status:'active', health:0,  alerts:0,stats:'Monitoring real-time' },
   { id:'m8',num:'08',name:'Konstituen',            desc:'By name by address — DPT, kawan, relasi, potensi',     color:'purple',status:'active', health:0,  alerts:0,stats:'By name by address' },
 ]
 
@@ -44,7 +46,7 @@ export const elektabilitasChart: any[] = []
 
 export const budgetPos: any[] = []
 
-export const provinsiGorontalo = [
+export const kabGorontalo = [
   { id: 'gorut',       name: 'Gorontalo Utara', dpt: 92601,  tps: 245, est_suara: 0 },
   { id: 'bone',        name: 'Bone Bolango',     dpt: 124546, tps: 294, est_suara: 0 },
   { id: 'bonebol',     name: 'Boalemo',          dpt: 108411, tps: 242, est_suara: 0 },
