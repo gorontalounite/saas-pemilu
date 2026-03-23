@@ -15,6 +15,35 @@ const PARTAI_COLOR: Record<string,string> = {
   'PSI':'#EC4899','Garuda':'#F87171','PBB':'#14B8A6','PKPI':'#9CA3AF',
 }
 
+
+function BarChart({ data, title, color = '#6366f1' }: {
+  data: { label: string; value: number; pct?: number }[]
+  title: string
+  color?: string
+}) {
+  const max = Math.max(...data.map(d => d.value), 1)
+  return (
+    <div>
+      <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">{title}</p>
+      <div className="space-y-1.5">
+        {data.map((d, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <span className="text-[9px] text-[var(--text-muted)] w-20 truncate flex-shrink-0 text-right">{d.label}</span>
+            <div className="flex-1 h-5 bg-[var(--bg-hover)] rounded overflow-hidden relative">
+              <div className="h-full rounded transition-all duration-500"
+                style={{ width: `${(d.value/max)*100}%`, backgroundColor: color, opacity: 0.7 }} />
+              <span className="absolute right-2 top-0 bottom-0 flex items-center text-[9px] font-medium text-[var(--text-primary)]">
+                {d.value.toLocaleString('id-ID')}
+                {d.pct !== undefined && <span className="text-[var(--text-muted)] ml-1">({d.pct}%)</span>}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 interface Props { onBack: () => void }
 
 export default function PetaSuara({ onBack }: Props) {
@@ -26,6 +55,7 @@ export default function PetaSuara({ onBack }: Props) {
   const [anggotaDapil, setAnggotaDapil] = useState<AnggotaDPRD[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingAnggota, setLoadingAnggota] = useState(false)
+  const [partaiChart, setPartaiChart] = useState<{label:string;value:number;pct:number}[]>([])
   const totalDPT = 884080
 
   useEffect(() => {
@@ -65,7 +95,18 @@ export default function PetaSuara({ onBack }: Props) {
       .eq('kabkota', selectedKab)
       .eq('nomor_dapil', nomorDapil)
       .order('suara_sah', { ascending: false })
-    setAnggotaDapil(data || [])
+    const anggotaData = data || []
+    setAnggotaDapil(anggotaData)
+    // Agregasi suara per partai untuk chart
+    const partaiMap: Record<string,number> = {}
+    anggotaData.forEach((a: any) => {
+      partaiMap[a.partai] = (partaiMap[a.partai] || 0) + a.suara_sah
+    })
+    const totalSuara = Object.values(partaiMap).reduce((a,b) => a+b, 0)
+    const chartData = Object.entries(partaiMap)
+      .sort((a,b) => b[1]-a[1])
+      .map(([label, value]) => ({ label, value, pct: Math.round(value/totalSuara*100) }))
+    setPartaiChart(chartData)
     setLoadingAnggota(false)
   }
 
@@ -87,7 +128,7 @@ export default function PetaSuara({ onBack }: Props) {
               <h2 className="text-base font-semibold text-[var(--text-primary)]">Peta Suara & Referensi</h2>
             </div>
             <p className="text-sm text-[var(--text-secondary)]">Hasil Pemilu 2024 · Data TPS & DPT · Pemetaan Dapil per Kabupaten/Kota</p>
-            <p className="text-xs text-[var(--text-muted)] mt-0.5">Provinsi Gorontalo · 2.016 TPS · 884.080 DPT · 14 Februari 2024</p>
+            <p className="text-xs text-[var(--text-muted)] mt-0.5">Provinsi Gorontalo · 3.539 TPS · 881.206 DPT · Pilkada 2024</p>
           </div>
         </div>
       </div>
@@ -220,6 +261,17 @@ export default function PetaSuara({ onBack }: Props) {
                               )}
                             </div>
                           </div>
+
+                          {/* Chart suara per partai */}
+                          {partaiChart.length > 0 && (
+                            <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--bg-hover)]">
+                              <BarChart
+                                data={partaiChart}
+                                title="Distribusi Suara per Partai (DPRD 2024)"
+                                color="#6366f1"
+                              />
+                            </div>
+                          )}
 
                           {/* Anggota terpilih */}
                           <div className="p-4 bg-[var(--bg-hover)]">
