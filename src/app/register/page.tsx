@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
-import { Zap, User, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown, ChevronRight } from 'lucide-react'
+import { Zap, User, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown, ChevronRight, Sun, Moon } from 'lucide-react'
 
 interface RefDapil {
   id: string
@@ -51,6 +51,18 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
   const [success, setSuccess] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Set LIGHT MODE on mount
+  useEffect(() => {
+    document.documentElement.classList.remove('dark')
+  }, [])
+
+  function toggleTheme() {
+    const newDark = !isDarkMode
+    setIsDarkMode(newDark)
+    document.documentElement.classList.toggle('dark', newDark)
+  }
 
   // Load dapil saat kontestasi dipilih
   useEffect(() => {
@@ -105,7 +117,7 @@ export default function RegisterPage() {
 
     const dapil = dapilList.find(d => d.id === dapilId)
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -115,15 +127,20 @@ export default function RegisterPage() {
           inisial: nama.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2),
           kontestasi,
           dapil: dapil?.nama_dapil || 'Gorontalo',
+          partai_id: partaiId || null,
         }
       }
     })
 
     if (signUpError) {
-      setError(signUpError.message)
+      console.error('Auth error:', signUpError)
+      setError(signUpError.message || 'Gagal signup. Coba lagi.')
       setLoading(false)
       return
     }
+
+    // Tunggu trigger execute & email confirmation
+    await new Promise(r => setTimeout(r, 1500))
 
     // Update partai di tabel kandidat jika bukan DPD RI
     if (!isDPD && partaiId) {
@@ -161,6 +178,13 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)] flex items-center justify-center px-4 py-8">
+      <button
+        onClick={toggleTheme}
+        className="fixed top-4 right-4 w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors z-50"
+      >
+        {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
+      </button>
+
       <div className="w-full max-w-md">
 
         {/* Logo */}
