@@ -2,141 +2,168 @@
 
 > **One Source of Truth. Satu platform, satu komando, satu instruksi.**
 
-Platform SaaS manajemen kampanye legislatif berbasis data — dirancang untuk Calon Anggota DPR RI / DPRD dan tim suksesnya. Mencakup seluruh siklus kampanye: dari manajemen relawan, pemetaan pemilih, kampanye digital, hingga quick count hari-H dan manajemen konstituen pasca terpilih.
+Platform SaaS manajemen kampanye legislatif berbasis data untuk Pemilu 2029 — dirancang untuk Calon Anggota DPR RI / DPRD dan tim suksesnya di Provinsi Gorontalo.
 
-**Live:** [https://saas-pemilu.vercel.app](https://saas-pemilu.vercel.app)
-**Repo:** [https://github.com/gorontalounite/saas-pemilu](https://github.com/gorontalounite/saas-pemilu)
+**Live:** [https://saas-pemilu.vercel.app](https://saas-pemilu.vercel.app)  
+**Repo:** [https://github.com/gorontalounite/saas-pemilu](https://github.com/gorontalounite/saas-pemilu)  
+**Supabase Project:** `ygaqoanykrwmzeuydexq` (ap-southeast-1)
 
 ---
 
-## Kondisi Saat Ini — v0.4 (Foundation Complete)
-
-Shell dashboard sudah berdiri penuh. Supabase client terhubung. Login page aktif. Migration schema belum dijalankan — CRUD per modul menyusul di sprint berikutnya.
+## Status Saat Ini — v0.7 (Beta — Auth & Dashboard Live)
 
 | Komponen | Status |
 |----------|--------|
-| Routing & navigasi sidebar | ✅ Selesai |
-| Dashboard Master (layout) | ✅ Selesai |
+| Routing & navigasi (13 modul) | ✅ Selesai |
+| Dashboard Master + peta SVG Gorontalo | ✅ Selesai |
 | Topbar + countdown 14 Feb 2029 | ✅ Selesai |
 | Dark / Light mode toggle | ✅ Selesai |
-| 10 modul — shell & placeholder | ✅ Selesai |
-| Daftar fitur & schema per modul | ✅ Selesai |
 | Responsive (mobile + desktop) | ✅ Selesai |
-| CI/CD otomatis via Vercel + GitHub | ✅ Aktif |
-| Database Center (schema viewer) | ✅ Selesai |
-| RAG Knowledge Base (UI) | ✅ Selesai |
-| Login page (/login) | ✅ Selesai |
-| Supabase client (`src/lib/supabase.ts`) | ✅ Terhubung |
-| Supabase CLI + `supabase/config.toml` | ✅ Init |
-| Peta SVG Gorontalo interaktif (6 kab/kota) | ✅ Selesai |
-| Google Maps embed per kabupaten | ✅ Selesai |
-| Konstituen panel (UI) | ✅ Selesai |
-| Supabase Auth (multi-tenant, session) | 🔲 Belum |
-| SQL Migration schema database | 🔲 Belum |
-| CRUD per modul | 🔲 Belum |
-| Upload file (DPT, foto, dokumen) | 🔲 Belum |
-| React Native app (relawan & saksi) | 🔲 Belum |
-| WhatsApp API integration | 🔲 Belum |
+| Login page + Register 4-step | ✅ Selesai (dengan error handling) |
+| Supabase Auth — signup/login/logout | ✅ Aktif |
+| Middleware proteksi route | ✅ Aktif |
+| Landing page (/landing) | ✅ Selesai |
+| Database schema 48 tabel | ✅ Migrasi selesai |
+| RLS Policies — semua tabel | ✅ Selesai |
+| Database Center — CRUD interface | ✅ Selesai |
+| RAG Knowledge Base | ✅ Selesai |
+| Modul 10 — Peta Suara & Referensi | ✅ Live |
+| Modul 11 — Chatbot ARIA (Anthropic API) | ✅ Live |
+| Modul 12 — Media Monitoring | ✅ Live |
+| CI/CD Vercel | ✅ Aktif |
 
----
+### ⚠️ Known Issues (Sprint Berikutnya)
 
-## Struktur File Aktual
+1. **Register Error:** "Database error saving new user"
+   - Trigger Supabase perlu diverifikasi
+   - Saat ini email confirmation masih pending
 
-```
-saas-pemilu/
-├── src/
-│   ├── app/
-│   │   ├── globals.css               ← CSS variables, dark/light theme
-│   │   ├── layout.tsx                ← Root layout + metadata
-│   │   ├── page.tsx                  ← Entry point, routing state (AppView)
-│   │   └── login/
-│   │       └── page.tsx              ← Login page (Supabase Auth — UI ready)
-│   ├── components/
-│   │   ├── Sidebar.tsx               ← Navigasi 10 modul + Database/RAG
-│   │   ├── Topbar.tsx                ← Breadcrumb, countdown, dark/light toggle
-│   │   ├── DashboardOverview.tsx     ← Modul 00 — command center + peta mini
-│   │   ├── ModulPage.tsx             ← Shell semua modul + peta Gorontalo + konstituen
-│   │   ├── DatabaseCenter.tsx        ← Schema viewer, chart placeholder, field DB
-│   │   └── RAGKnowledge.tsx          ← Knowledge base regulasi & strategi pemilu
-│   └── lib/
-│       ├── data.ts                   ← Mock data (candidate, modul, schema fields)
-│       └── supabase.ts               ← Supabase client (createClient)
-├── supabase/
-│   └── config.toml                   ← Supabase CLI config (linked ke project)
-├── .env.local                        ← SUPABASE_URL + ANON_KEY (tidak di-commit)
-├── .env.local.example                ← Template env
-├── next.config.js
-├── tailwind.config.js
-├── tsconfig.json
-├── vercel.json
-└── README.md
-```
-
----
-
-## 10 Modul Produk
-
-| No | Modul | Deskripsi | Status |
-|----|-------|-----------|--------|
-| 00 | Dashboard Master | Command center semua modul, countdown H-Day, peta mini | 🟡 Shell |
-| 09 | Profil Calon | Profil, visi misi, program kerja, jadwal kampanye, rekam jejak | 🟡 Shell |
-| 01 | Relawan & Posko | Database relawan, hierarki tim, absensi QR, tugas, WA blast | 🟡 Shell |
-| 02 | Pemetaan Pemilih | Peta TPS Gorontalo interaktif, DPT, segmentasi, canvassing | 🟡 Shell |
-| 03 | Kampanye Digital | Kalender konten, sosmed monitoring, iklan, AI generator | 🟡 Shell |
-| 04 | Saksi & Quick Count | Penugasan saksi, upload C1, agregasi real-time | 🟡 Shell (aktif H-Day) |
-| 05 | Survei & Elektabilitas | Builder survei, tracking elektabilitas, simulasi suara | 🟡 Shell |
-| 06 | Keuangan & Budget | RAB, approval, LPPDK otomatis, cost per vote | 🟡 Shell |
-| 07 | War Room | Dashboard eksekutif, laporan harian WA, crisis room | 🟡 Shell |
-| 08 | Konstituen | By-name by-address, DPT, potensi pemilih, CRM pasca terpilih | 🟡 Shell |
+2. **Dark/Light Mode:** Login & Register masih muncul dark mode
+   - Perlu force light mode di mount
+   - CSS variables global mungkin override
 
 ---
 
 ## Tech Stack
 
-| Layer | Teknologi |
-|-------|-----------|
-| Frontend | Next.js 14 (App Router) · TypeScript · Tailwind CSS |
-| Backend & DB | Supabase (PostgreSQL + PostGIS + Auth + Storage + Realtime) |
-| Deploy | Vercel (CI/CD otomatis dari GitHub `main`) |
-| Peta | SVG interaktif (saat ini) → Leaflet.js + OpenStreetMap (planned) |
-| Mobile | React Native (Expo) — relawan & saksi (planned) |
-| Realtime | Supabase Realtime → Socket.io + Redis untuk quick count H-Day |
-| Messaging | WhatsApp Business API via Fonnte/Wablas (planned) |
-| OCR | Google Vision API — scan form C1 (planned) |
-| AI | OpenAI API — generator konten kampanye (planned) |
+| Layer | Detail |
+|-------|--------|
+| Frontend | Next.js 14.2.5 — App Router, TypeScript, Tailwind CSS |
+| Database | Supabase — PostgreSQL, Auth, RLS, Realtime |
+| Deploy | Vercel — auto-deploy dari GitHub `main` |
+| AI | Anthropic Claude API (Modul 11) |
+| Icons | Lucide React |
+| State | React hooks + TenantContext (multi-tenant) |
 
 ---
 
-## Setup Lokal
+## Instalasi Lokal
+
+### 1. Clone Repository
 
 ```bash
-# 1. Clone repo
 git clone https://github.com/gorontalounite/saas-pemilu.git
 cd saas-pemilu
+```
 
-# 2. Install dependencies
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# 3. Setup environment
-cp .env.local.example .env.local
-# Edit .env.local: isi NEXT_PUBLIC_SUPABASE_URL & NEXT_PUBLIC_SUPABASE_ANON_KEY
+### 3. Setup Environment Variables
 
-# 4. Jalankan dev server
+Buat file `.env.local` di root folder:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://ygaqoanykrwmzeuydexq.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<ambil dari Supabase dashboard>
+```
+
+### 4. Jalankan Development Server
+
+```bash
 npm run dev
-# Buka http://localhost:3000
+```
+
+Buka: http://localhost:3000
+
+---
+
+## Project Structure
+
+```
+saas-pemilu/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx               ← Main dashboard & routing
+│   │   ├── globals.css            ← CSS variables dark/light
+│   │   ├── landing/page.tsx       ← Landing page
+│   │   ├── login/page.tsx         ← Login (light mode default)
+│   │   └── register/page.tsx      ← Register 4-step (light mode default)
+│   ├── components/
+│   │   ├── Sidebar.tsx
+│   │   ├── Topbar.tsx
+│   │   ├── DashboardOverview.tsx  ← Modul 00
+│   │   ├── ModulPage.tsx          ← Shell modul 01-09
+│   │   ├── DatabaseCenter.tsx
+│   │   ├── RAGKnowledge.tsx
+│   │   ├── PetaSuara.tsx          ← Modul 10 (live)
+│   │   ├── ModulAria.tsx          ← Modul 11 (live)
+│   │   └── ModulMediaMonitoring.tsx ← Modul 12 (live)
+│   ├── lib/
+│   │   ├── supabase.ts            ← Browser client
+│   │   ├── supabase-server.ts     ← Server client
+│   │   └── data.ts                ← Mock data & constants
+│   ├── contexts/
+│   │   └── TenantContext.tsx      ← Multi-tenant state
+│   └── middleware.ts              ← Auth routing protection
+├── supabase/
+│   ├── config.toml
+│   └── migrations/               ← 11 migration files
+├── .env.local.example
+├── tailwind.config.js
+├── tsconfig.json
+└── package.json
 ```
 
 ---
 
-## Deploy
+## 13 Modul Produk
 
-Push ke `main` → Vercel auto-deploy dalam ~90 detik.
+| No | Modul | Deskripsi | Status |
+|----|-------|-----------|--------|
+| 00 | Dashboard Master | Command center semua modul | 🟡 Shell |
+| 09 | Profil Calon | Profil, visi misi, program kerja | 🟡 Shell |
+| 01 | Relawan & Posko | Database relawan, absensi, tugas | 🟡 Shell |
+| 02 | Pemetaan Pemilih | Peta TPS, DPT, canvassing | 🟡 Shell |
+| 03 | Kampanye Digital | Konten, sosmed monitoring | 🟡 Shell |
+| 04 | Saksi & Quick Count | Upload C1, agregasi real-time | 🟡 Shell (H-Day) |
+| 05 | Survei & Elektabilitas | Tracking elektabilitas, simulasi | 🟡 Shell |
+| 06 | Keuangan & Budget | RAB, transaksi, LPPDK | 🟡 Shell |
+| 07 | War Room | Crisis room, laporan eksekutif | 🟡 Shell |
+| 08 | Konstituen | By-name by-address, CRM | 🟡 Shell |
+| 10 | Peta Suara & Referensi | Data DPRD, dapil, histori 2019 | 🟢 Live |
+| 11 | Chatbot ARIA | AI kampanye via Anthropic | 🟢 Live |
+| 12 | Media Monitoring | Berita, sosmed, sentimen | 🟢 Live |
+
+---
+
+## Deploy ke Vercel
+
+### 1. Push ke GitHub
 
 ```bash
 git add .
 git commit -m "feat: deskripsi perubahan"
-git push
+git push origin main
 ```
+
+### 2. Auto-deploy Vercel
+
+Vercel akan otomatis deploy dalam ~90 detik saat push ke `main`.
 
 **Environment variables di Vercel Dashboard:**
 ```
@@ -144,111 +171,176 @@ NEXT_PUBLIC_SUPABASE_URL      = https://ygaqoanykrwmzeuydexq.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJhbGci...
 ```
 
+### 3. Verifikasi
+
+Buka: https://saas-pemilu.vercel.app
+
 ---
 
-## Supabase — Next Steps
+## Database Schema
 
-```bash
-# Link project (sudah dilakukan)
-supabase link --project-ref ygaqoanykrwmzeuydexq
+### Tabel Referensi (Read-Only)
+- `ref_kabkota` — 6 kabupaten/kota Gorontalo
+- `ref_partai` — 18 partai peserta Pemilu 2024
+- `ref_dapil` — Semua dapil (DPR RI, DPRD Prov, DPRD Kab/Kota)
+- `ref_anggota_dprd` — Anggota DPRD terpilih 2024
+- `histori_pemilu` — Hasil Pileg 2019
 
-# Jalankan migration pertama (Sprint 1)
-supabase db push
+### Tabel Auth & Tenant
+- `profiles` — Sync dengan auth.users
+- `users` — Extended user profile
+- `kandidat` — Data kandidat (id = auth.uid())
+- `tenants` — Multi-tenant
+- `tenant_members` — Role per user
 
-# Enable Realtime untuk tabel:
-# c1_uploads, aktivitas, alerts
+### Tabel Operasional (48 total)
+Relawan, TPS, Posko, Pemilih, Absensi, Tugas, Konten, Rab, Transaksi, Survei, Crisis_room, dan 37 tabel lainnya.
 
-# Setup Storage bucket:
-# assets, dokumen, foto_relawan, foto_c1
+---
+
+## Routing & Pages
+
+| Path | Deskripsi | Status |
+|------|-----------|--------|
+| `/landing` | Landing page | ✅ Public |
+| `/` | Dashboard (protected) | ✅ Auth required |
+| `/login` | Login page | ✅ Public |
+| `/register` | Register 4-step | ✅ Public |
+| `/auth/callback` | Supabase callback | ✅ Public |
+
+**Middleware Logic:**
+```
+Jika tidak login → redirect ke /login
+Jika sudah login + akses /login atau /register → redirect ke /
+Jika akses / → check auth → jika belum login, redirect ke /landing
 ```
 
-### Tabel yang akan dibuat (Sprint 1):
+---
 
-| Tabel | Keterangan |
-|-------|------------|
-| `profiles` | Data kandidat per tenant (multi-tenant) |
-| `user_roles` | Role: kandidat / manajer / koordinator / relawan / saksi |
-| `relawan` | Database relawan + hierarki wilayah |
-| `tps` | Data TPS Gorontalo + koordinat GPS |
-| `pemilih` | DPT + segmentasi per TPS |
-| `konten` | Jadwal & aset kampanye digital |
-| `transaksi` | Keuangan & RAB kampanye |
-| `survei` + `respons_survei` | Builder survei & elektabilitas |
-| `c1_uploads` | Quick count hari-H (realtime) |
-| `konstituen` | CRM pasca terpilih |
-| `audit_log` | Semua aksi user (immutable) |
+## Build & Testing
+
+### Build Production
+
+```bash
+npm run build
+```
+
+### Jalankan Production Build Locally
+
+```bash
+npm run start
+```
+
+### Lint Code
+
+```bash
+npm run lint
+```
 
 ---
 
-## Roadmap Sprint
+## Konvensi Kode
 
-### ✅ Sprint 0 — Shell & Foundation
-- [x] Layout, sidebar, topbar, routing
-- [x] Dark/light mode
-- [x] 10 modul placeholder + schema fields
-- [x] Database Center + RAG Knowledge Base
-- [x] Peta SVG Gorontalo interaktif + Google Maps embed
-- [x] Login page UI
-- [x] Supabase client setup
-- [x] Supabase CLI init + link project
-- [x] CI/CD Vercel aktif
+### CSS & Variables
+Semua warna pakai CSS variables (lihat `src/app/globals.css`):
+```css
+--bg-base       /* background halaman */
+--bg-card       /* background card */
+--bg-hover      /* hover state */
+--border        /* border default */
+--text-primary  /* teks utama */
+--text-secondary/* teks sekunder */
+--text-muted    /* teks redup */
+```
 
-### 🔄 Sprint 1 — Supabase Auth & Multi-Tenant (Aktif)
-- [ ] SQL migration: schema lengkap semua tabel
-- [ ] Auth: signup/login/logout via Supabase
-- [ ] Session management + middleware proteksi route
-- [ ] Role-based access control (RBAC)
-- [ ] Kandidat onboarding flow (isi profil pertama kali)
+### Supabase Client
+```typescript
+// Browser component
+import { createClient } from '@/lib/supabase'
+const supabase = createClient()
 
-### Sprint 2 — Modul 09: Profil Calon
-- [ ] Form input profil lengkap kandidat
-- [ ] Visi, misi, program kerja (CRUD)
-- [ ] Jadwal kampanye
-- [ ] Upload dokumen legal (KPU, LHKPN, ijazah)
+// Server component
+import { createServerSupabaseClient } from '@/lib/supabase-server'
+const supabase = await createServerSupabaseClient()
+```
 
-### Sprint 3 — Modul 01: Relawan & Posko
-- [ ] CRUD database relawan + import Excel
-- [ ] Hierarki tim (Korkot → Korcam → Korkel → Relawan)
-- [ ] Absensi QR code
-- [ ] Broadcast WA via WhatsApp API
-
-### Sprint 4 — Modul 02: Pemetaan Pemilih
-- [ ] Import DPT format KPU (XLS/CSV)
-- [ ] Leaflet.js — peta TPS interaktif
-- [ ] Segmentasi & heatmap dukungan per wilayah
-
-### Sprint 5 — Modul 06: Keuangan & Budget
-- [ ] Master budget + RAB per kegiatan
-- [ ] Approval flow bertingkat
-- [ ] Generate LPPDK format KPU
-
-### Sprint 6 — Modul 04: Saksi & Quick Count (H-Day)
-- [ ] Aplikasi mobile saksi (React Native Expo)
-- [ ] Upload foto C1 + OCR (Google Vision)
-- [ ] Dashboard agregasi real-time (Supabase Realtime)
+### Komponen
+- Semua `'use client'` untuk client components
+- Interface props selalu explicit
+- Toast: `{ type: 'ok'|'err', msg: string } | null`
 
 ---
 
-## Konteks Bisnis
+## Masalah & Debugging
 
-Filosofi: **One Source of Truth** — semua data kampanye mengalir dari satu platform, satu komando dari kandidat, satu instruksi ke seluruh tim. Tidak ada data berceceran di WhatsApp grup atau Excel yang berbeda.
+### Problem: "Database error saving new user"
 
-Target pengguna per level:
+**Penyebab:** Trigger Supabase tidak otomatis membuat user profile saat signup.
 
-| Role | Akses |
-|------|-------|
-| Kandidat | Penuh — dashboard eksekutif 60 detik |
-| Tim Sukses Inti | Semua modul kecuali master budget |
-| Bendahara | Modul keuangan & LPPDK |
-| Koordinator Wilayah | Data wilayahnya saja (kecamatan/kelurahan) |
-| Relawan Lapangan | Tugas harian & absensi |
-| Saksi TPS | Upload C1 hari-H |
+**Cara Debug:**
+1. Buka Supabase Dashboard → SQL Editor
+2. Cari trigger: `on_auth_user_created`
+3. Jalankan trigger manual atau check logs
+4. Verifikasi RLS policy pada tabel `users`, `kandidat`, `tenants`
+
+### Problem: Dark mode tidak hilang di login/register
+
+**Penyebab:** CSS global override atau class `.dark` masih ada di `<html>`.
+
+**Solusi:**
+```typescript
+useEffect(() => {
+  document.documentElement.classList.remove('dark')
+  document.documentElement.classList.add('light')
+}, [])
+```
+
+---
+
+## Roadmap
+
+### Sprint 2 — CRUD Live Modul Prioritas
+- [ ] Modul 09: form profil kandidat
+- [ ] Modul 01: CRUD relawan + CSV import
+- [ ] Modul 06: RAB + transaksi
+
+### Sprint 3 — Pemetaan Pemilih
+- [ ] Modul 02: import DPT dari KPU
+- [ ] Leaflet.js peta interaktif
+- [ ] Canvassing form
+
+### Sprint 4 — Kampanye Digital
+- [ ] Modul 03: kalender konten + approval
+- [ ] WhatsApp API integration
+
+### Sprint 5 — Quick Count H-Day
+- [ ] Modul 04: penugasan saksi + upload C1
+- [ ] OCR foto C1
+- [ ] Realtime agregasi
+
+---
+
+## Kontribusi
+
+1. Fork repo
+2. Buat branch feature: `git checkout -b feature/nama-fitur`
+3. Commit: `git commit -m "feat: deskripsi"`
+4. Push: `git push origin feature/nama-fitur`
+5. Buat Pull Request
 
 ---
 
 ## Lisensi
 
 Proprietary — hak cipta milik tim pengembang. Tidak untuk didistribusikan tanpa izin.
+
+---
+
+## Support
+
+- **Issues:** [GitHub Issues](https://github.com/gorontalounite/saas-pemilu/issues)
+- **Documentation:** Lihat `CLAUDE.md`
+- **Live Demo:** https://saas-pemilu.vercel.app
 
 ---
 

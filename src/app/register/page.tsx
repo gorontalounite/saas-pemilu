@@ -127,6 +127,7 @@ export default function RegisterPage() {
           inisial: nama.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2),
           kontestasi,
           dapil: dapil?.nama_dapil || 'Gorontalo',
+          dapil_id: dapilId,
           partai_id: partaiId || null,
         }
       }

@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [dark, setDark]         = useState(false)
 
   useEffect(() => {
-    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.remove('light')
   }, [])
 
   function toggleTheme() {
