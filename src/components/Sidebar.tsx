@@ -1,12 +1,13 @@
 'use client'
-import { useState } from 'react'
-import { modulData, candidate } from '@/lib/data'
+import { useState, useEffect } from 'react'
+import { modulData } from '@/lib/data'
+import { createClient } from '@/lib/supabase'
 import type { AppView } from '@/app/page'
 import {
   LayoutDashboard, Users, Map, Megaphone, ClipboardCheck,
   BarChart2, Wallet, Radio, Heart, UserCircle,
   ChevronRight, Settings, LogOut, Menu, X,
-  Zap, Sun, Moon, Database, BookOpen
+  Zap, Sun, Moon, Database, BookOpen, Loader2
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
@@ -22,6 +23,14 @@ const colorMap: Record<string, string> = {
   red:'text-red-400 bg-red-500/10',
 }
 
+interface KandidatInfo {
+  nama_lengkap: string
+  inisial: string | null
+  kontestasi: string | null
+  dapil: string | null
+  partai: string | null
+}
+
 interface Props {
   activeModul: string
   onSelect: (id: string) => void
@@ -33,9 +42,37 @@ interface Props {
 
 export default function Sidebar({ activeModul, onSelect, appView, onSetView, isDark, onToggleTheme }: Props) {
   const [open, setOpen] = useState(false)
+  const [kandidat, setKandidat] = useState<KandidatInfo | null>(null)
+  const [loadingUser, setLoadingUser] = useState(true)
+  const supabase = createClient()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) { setLoadingUser(false); return }
+      const { data: k } = await supabase
+        .from('kandidat')
+        .select('nama_lengkap, inisial, kontestasi, dapil, partai')
+        .eq('id', data.user.id)
+        .single()
+      if (k) setKandidat(k)
+      setLoadingUser(false)
+    })
+  }, [])
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
+
+  const inisial = kandidat?.inisial || kandidat?.nama_lengkap?.slice(0, 2).toUpperCase() || 'AD'
+  const namaDisplay = kandidat?.nama_lengkap || 'Admin'
+  const subDisplay = kandidat?.dapil
+    ? `${kandidat.kontestasi?.replace('_', ' ').toUpperCase()} · ${kandidat.dapil}`
+    : 'Login untuk setup profil'
 
   const Content = () => (
     <div className="flex flex-col h-full">
+      {/* Logo */}
       <div className="px-4 py-4 border-b border-[var(--border)] flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center flex-shrink-0">
           <Zap size={15} className="text-white" />
@@ -46,20 +83,21 @@ export default function Sidebar({ activeModul, onSelect, appView, onSetView, isD
         </div>
       </div>
 
-      {/* Candidate chip */}
+      {/* Kandidat chip */}
       <div className="px-3 py-2.5 border-b border-[var(--border)]">
         <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[var(--bg-hover)]">
           <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs font-bold text-indigo-300 flex-shrink-0">
-            {candidate.initials}
+            {loadingUser ? <Loader2 size={13} className="animate-spin" /> : inisial}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-[var(--text-primary)] truncate">{candidate.name}</p>
-            <p className="text-[10px] text-[var(--text-muted)]">Login untuk setup profil</p>
+            <p className="text-xs font-medium text-[var(--text-primary)] truncate">{namaDisplay}</p>
+            <p className="text-[10px] text-[var(--text-muted)] truncate">{subDisplay}</p>
           </div>
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" title="Belum login" />
+          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${kandidat ? 'bg-green-400' : 'bg-amber-400'}`} />
         </div>
       </div>
 
+      {/* Nav modul */}
       <nav className="flex-1 overflow-y-auto py-2 px-2">
         <p className="text-[9px] font-semibold text-[var(--text-muted)] uppercase tracking-widest px-2 mb-1.5">Modul Kampanye</p>
         {modulData.map((m) => {
@@ -99,6 +137,7 @@ export default function Sidebar({ activeModul, onSelect, appView, onSetView, isD
         </div>
       </nav>
 
+      {/* Footer */}
       <div className="px-2 py-2 border-t border-[var(--border)] space-y-0.5">
         <button onClick={onToggleTheme} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
           {isDark ? <Sun size={13} className="text-amber-400" /> : <Moon size={13} className="text-indigo-400" />}
@@ -107,8 +146,8 @@ export default function Sidebar({ activeModul, onSelect, appView, onSetView, isD
         <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-all">
           <Settings size={13} /><span className="text-xs">Pengaturan</span>
         </button>
-        <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-indigo-400/70 hover:text-indigo-400 hover:bg-indigo-500/8 transition-all">
-          <LogOut size={13} /><span className="text-xs">Login / Daftar</span>
+        <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-500/8 transition-all">
+          <LogOut size={13} /><span className="text-xs">Keluar</span>
         </button>
       </div>
     </div>

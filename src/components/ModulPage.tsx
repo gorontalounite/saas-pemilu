@@ -295,15 +295,3 @@ export default function ModulPage({ modulId, onBack }: Props) {
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 flex items-center gap-3">
         <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-sm">🔨</div>
         <p className="text-[11px] text-[var(--text-secondary)] flex-1">
-          Modul dalam pengembangan. Input & edit data melalui <strong>Database Center</strong> di topbar atau sidebar. Koneksi Supabase menyusul di sprint berikutnya.
-        </p>
-      </div>
-      {tables.length > 0 && (
-        <div>
-          <p className="text-xs font-semibold text-[var(--text-primary)] mb-3">Data — {tables.length} tabel</p>
-          {tables.map((t, i) => <DataTable key={i} section={t.section} cols={t.cols} />)}
-        </div>
-      )}
-    </div>
-  )
-}
