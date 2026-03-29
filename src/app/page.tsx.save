@@ -1,6 +1,5 @@
-'use client'
+∑'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase'
 import Sidebar from '@/components/Sidebar'
 import Topbar from '@/components/Topbar'
 import DashboardOverview from '@/components/DashboardOverview'
@@ -13,27 +12,13 @@ import { modulData } from '@/lib/data'
 export type AppView = 'main' | 'database' | 'rag'
 
 export default function Home() {
-  const supabase = createClient()
   const [activeModul, setActiveModul] = useState('m0')
   const [appView, setAppView] = useState<AppView>('main')
   const [isDark, setIsDark] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        window.location.href = '/landing'
-      } else {
-        setLoading(false)
-      }
-    })
-  }, [])
 
   useEffect(() => {
     document.documentElement.classList.toggle('light', !isDark)
   }, [isDark])
-
-  if (loading) return <div className="h-screen bg-[var(--bg-base)]" />
 
   const currentModul = modulData.find(m => m.id === activeModul)
   const moduleName = appView === 'database'

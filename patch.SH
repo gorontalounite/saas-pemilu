@@ -1,3 +1,11 @@
+#!/bin/bash
+# Jalankan dari folder: /Users/stevenpolapa/Downloads/Files v2/saas-pemilu
+
+PROJECT="/Users/stevenpolapa/Downloads/Files v2/saas-pemilu"
+cd "$PROJECT"
+
+# ── 1. Ganti login/page.tsx dengan versi baru ──────────────────────────────
+cat > src/app/login/page.tsx << 'LOGINEOF'
 'use client'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
@@ -121,3 +129,25 @@ export default function LoginPage() {
     </div>
   )
 }
+LOGINEOF
+
+echo "✅ login/page.tsx updated"
+
+# ── 2. Tambah dark mode toggle ke register/page.tsx ───────────────────────
+# Tambah Sun, Moon ke import lucide
+sed -i '' "s/import { Zap, User, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown, ChevronRight } from 'lucide-react'/import { Zap, User, Mail, Lock, Eye, EyeOff, Loader2, ChevronDown, ChevronRight, Sun, Moon } from 'lucide-react'/" src/app/register/page.tsx
+
+# Tambah state dark setelah state success
+sed -i '' 's/const \[success, setSuccess\] = useState(false)/const [success, setSuccess] = useState(false)\n  const [dark, setDark] = useState(false)\n\n  useEffect(() => {\n    document.documentElement.classList.remove('\''dark'\'')\n  }, [])\n\n  function toggleTheme() {\n    const isDark = document.documentElement.classList.toggle('\''dark'\'')\n    setDark(isDark)\n  }/' src/app/register/page.tsx
+
+# Tambah tombol toggle setelah <div className="w-full max-w-md">
+sed -i '' 's/<div className="w-full max-w-md">/<div className="w-full max-w-md">\n\n        <button\n          onClick={toggleTheme}\n          className="fixed top-4 right-4 w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"\n        >\n          {dark ? <Sun size={14} \/> : <Moon size={14} \/>}\n        <\/button>/' src/app/register/page.tsx
+
+echo "✅ register/page.tsx updated"
+
+# ── 3. Hapus file login duplikat ───────────────────────────────────────────
+rm -f src/app/login_page.tsx
+echo "✅ login_page.tsx (duplikat) dihapus"
+
+echo ""
+echo "🚀 Semua selesai. Jalankan: git add . && git commit -m 'feat: login redesign + sign up button + dark mode toggle' && git push"
