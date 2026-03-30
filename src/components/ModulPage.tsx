@@ -295,3 +295,13 @@ export default function ModulPage({ modulId, onBack }: Props) {
       <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 flex items-center gap-3">
         <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-sm">🔨</div>
         <p className="text-[11px] text-[var(--text-secondary)] flex-1">
+          <strong className="text-[var(--text-primary)]">Data — {tables.length} tabel</strong>
+          {' '}siap diisi melalui Database Center.
+        </p>
+        <BarChart size={14} className="text-[var(--text-muted)] flex-shrink-0" />
+      </div>
+      <p className="text-xs font-semibold text-[var(--text-secondary)] mt-2 mb-3">Data — {tables.length} tabel</p>
+      {tables.map(t => <DataTable key={t.section} section={t.section} cols={t.cols} />)}
+    </div>
+  )
+}
